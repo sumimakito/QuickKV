@@ -177,6 +177,8 @@ qucikKv.isPersistableKVDBOpened("dbName");
 
 ### Copyright 版权信息
 
-* Copyright (C) 2014-2015 SumiMakito(RDGroup).
+Copyright (C) 2014-2015 SumiMakito(RDGroup).
 
-* Licensed under GNU GPL v3.
+Licensed under GNU GPL v3.
+
+[Read License](LICENSE)
