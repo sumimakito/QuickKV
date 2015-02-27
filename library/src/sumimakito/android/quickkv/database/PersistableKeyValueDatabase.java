@@ -95,7 +95,7 @@ public class PersistableKeyValueDatabase extends ADatabase
 	{
 		if (persistInterval != 0)
 		{
-			if (persistInterval >= opStep)
+			if (persistInterval <= opStep)
 			{
 				this.opStep = 0;
 				this.persist();
