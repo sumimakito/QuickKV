@@ -26,6 +26,14 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 
 * AES256 Encryption(Improvement)
 
+### Download Demo 下载演示
+
+[Dropbox](https://www.dropbox.com/s/53b86j9xuhpw9f1/QuickKVDemo.apk?dl=0)
+
+[Google Drive](https://docs.google.com/file/d/0B_-0A4yjEnvMMVFLV0hfVDNUbUU/edit?usp=docslist_api)
+
+[百度云](http://pan.baidu.com/share/link?shareid=1713766086&uk=1479848638)
+
 ### Usage 用法
 
 #### Import 导入
