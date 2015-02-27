@@ -61,6 +61,11 @@ public class PersistableKeyValueDatabase extends ADatabase
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to set persist interval: Interval cannot less than 0!");
 		}
 	}
+	
+	public void sync(){
+		this.loadPKVDB();
+		Log.i(QKVConfig.PUBLIC_LTAG, "Persistable database synchronized!");
+	}
 
 	@Override
 	public void put(Object k, Object v)
@@ -111,6 +116,7 @@ public class PersistableKeyValueDatabase extends ADatabase
 	{
 		try
 		{
+			this.dMap.clear();
 			FileInputStream kvdbFis = pContext.openFileInput(dbName == null ?QKVConfig.PKVDB_FILENAME: dbName);
 			byte[] bytes = new byte[1024];  
             ByteArrayOutputStream baos = new ByteArrayOutputStream();  

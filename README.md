@@ -110,6 +110,24 @@ pkvdb.remove(k); //k must be type of String/Integer/Long/Double/Float/Boolean/JS
 pkvdb.persist();
 ```
 
+* Sync 同步
+
+*For multi-instance purpose, but we don't recommend you to do so. Frequently synchronization will affect the performance. 为多实例目的而设计，但不推荐使用。频繁地同步操作将会影响性能。*
+
+> This method will synchronize current database from persisted version(Database dbName must be the same or both are default).
+> 这个方法将会使数据从已持久化版本同步至当前数据库，并覆盖当前内容(数据库名称必须相同或均为默认)。
+
+```java
+PersistableKeyValueDatabase pkvdb1 = new QuickKV(this).getDefaultPersistableKVDB();
+PersistableKeyValueDatabase pkvdb2 = new QuickKV(this).getDefaultPersistableKVDB();
+pkvdb1.put("key", "value");
+pkvdb1.persist();
+pkvdb2.sync();
+String value = pkvdb2.get("key").toString();
+System.out.println(value);
+//Output: "value"
+```
+
 * Clear 清除数据
 
 > This method will clear all data in the specified database.
