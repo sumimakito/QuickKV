@@ -4,7 +4,7 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 为Android项目提供的轻量且易用的键值数据库
 
-[![BuildStatus](https://travis-ci.org/SumiMakito/QucikKV.png)](https://travis-ci.org/SumiMakito/QuickKV)
+[![Build Status](https://travis-ci.org/SumiMakito/QuickKV.svg?branch=master)](https://travis-ci.org/SumiMakito/QuickKV)
 
 ### Preface 前言
 

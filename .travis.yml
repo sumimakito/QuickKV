@@ -5,6 +5,10 @@ android:
     - build-tools-21.1.2
     - android-21
     - extra
+    
+before_install:
+    - chmod +x gradlew
 
 script:
-  ./gradlew clean build
+    ./gradlew clean build
+  
