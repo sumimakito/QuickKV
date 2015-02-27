@@ -4,6 +4,8 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 为Android项目提供的轻量且易用的键值数据库
 
+[![BuildStatus](https://travis-ci.org/SumiMakito/QucikKV.png)](https://travis-ci.org/SumiMakito/QuickKV)
+
 ### Preface 前言
 
 Map and List is too complex to initialize.Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
