@@ -1,3 +1,5 @@
 ./gradlew clean build
-curl -F "file=@./library/build/libs/library-0.6-source.jar" http://repo.keep.moe/api/travis/push/qkv.php
-curl -F "file=@./library/build/libs/library-0.6-javadoc.jar" http://repo.keep.moe/api/travis/push/qkv.php
+sources=@`ls | grep sources.jar`
+javadoc=@`ls | grep javadoc.jar`
+curl -F "file=${sources}" http://repo.keep.moe/api/travis/push/qkv.php
+curl -F "file=${javadoc}" http://repo.keep.moe/api/travis/push/qkv.php
