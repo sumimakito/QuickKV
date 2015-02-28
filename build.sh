@@ -1,2 +1,2 @@
-gradlew clean build
-ls
+./gradlew clean build
+find ./
