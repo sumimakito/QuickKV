@@ -1,3 +1,3 @@
 ./gradlew clean build
-curl --form "jar=./library/build/libs/library-*-sources.jar" http://code.keep.moe/api/ci/push/QuickKV
-curl --form "jar=./library/build/libs/library-*-javadoc.jar" http://code.keep.moe/api/ci/push/QuickKV
+curl -F "file=@./library/build/libs/library-*-sources.jar" http://repo.keep.moe/api/travis/push/qkv.php
+curl -F "jar=@./library/build/libs/library-*-javadoc.jar" http://repo.keep.moe/api/travis/push/qkv.php
