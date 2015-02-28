@@ -1,6 +1,4 @@
-# QuickKV
-
-[![Build Status](https://travis-ci.org/SumiMakito/QuickKV.svg?branch=master)](https://travis-ci.org/SumiMakito/QuickKV)
+# QuickKV [![Build Status](https://travis-ci.org/SumiMakito/QuickKV.svg?branch=master)](https://travis-ci.org/SumiMakito/QuickKV)
 
 Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 

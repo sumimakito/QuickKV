@@ -7,7 +7,7 @@ android:
     - extra
     
 before_install:
-    - chmod +x build.sh
+    - chmod +x ./travis-ci/run-build.sh
     - chmod +x gradlew
 
 script:
