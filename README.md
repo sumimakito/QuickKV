@@ -10,6 +10,10 @@ Map and List is too complex to initialize.Actually, the things we only need to f
 
 Map和List的初始化很复杂。事实上，我们只需要关注键与值就够了。于是，QuickKV诞生了。
 
+### Current version 当前版本
+
+##### 0.6
+
 ### Features 特性
 
 * Allow nearly all types key and value 几乎支持所有类型的键与值
@@ -24,9 +28,17 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 
 ### TODO 目标
 
+* Dump raw persistable database
+
 * AES256 Encryption(Improvement)
 
-### Download Demo 下载演示
+### Download 下载
+
+##### JAR File JAR文件
+
+[CR-α代码仓库](http://repo.keep.moe/static/?dir=QuickKV)
+
+##### Demo 演示
 
 [Dropbox](https://www.dropbox.com/s/53b86j9xuhpw9f1/QuickKVDemo.apk?dl=0)
 
@@ -35,6 +47,8 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 [百度云](http://pan.baidu.com/share/link?shareid=1713766086&uk=1479848638)
 
 ### Usage 用法
+
+*First add jar file to your build path. 首先在Build Path中加入JAR文件。*
 
 #### Import 导入
 
