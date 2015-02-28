@@ -11,5 +11,5 @@ before_install:
     - chmod +x gradlew
 
 script:
-    ./build.sh
+    ./travis-ci/run-build.sh
   
