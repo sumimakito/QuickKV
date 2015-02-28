@@ -7,8 +7,8 @@ android:
     - extra
     
 before_install:
-    - chmod +x run-build.sh
-    - chmod +x gradlew
+    - chmod +x ./run-build.sh
+    - chmod +x ./gradlew
 
 script:
     ./run-build.sh
