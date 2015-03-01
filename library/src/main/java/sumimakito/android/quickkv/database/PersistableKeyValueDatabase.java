@@ -54,6 +54,14 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
+	public String getDBName(){
+		return this.dbName;
+	}
+	
+	public String getLTAG(){
+		return this.LTAG;
+	}
+	
 	public void setPersistInterval(int interval)
 	{
 		if (interval >= 0)
@@ -425,12 +433,12 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	private QKVCallback cbkSuccess()
+	public QKVCallback cbkSuccess()
 	{
 		return this.isCallbackEnabled ?new QKVCallback(): null;
 	}
 
-	private QKVCallback cbkFailed(String msg)
+	public QKVCallback cbkFailed(String msg)
 	{
 		return this.isCallbackEnabled ?new QKVCallback(false, QKVCallback.CODE_FAILED, msg): null;
 	}
