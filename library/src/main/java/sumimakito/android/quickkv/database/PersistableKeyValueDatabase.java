@@ -19,13 +19,12 @@ import sumimakito.android.quickkv.util.*;
 
 public class PersistableKeyValueDatabase
 {
-	private static String LTAG;
+	protected static String LTAG;
 	private HashMap<Object, Object> dMap;
 	private Context pContext;
 	private int persistInterval = 0;
 	private int opStep = 0;
-	private String dbName = null;
-	private String pKey = null;
+	protected String dbName = null;
 	private boolean isCallbackEnabled;
 
 	public PersistableKeyValueDatabase(Context context)
@@ -52,14 +51,6 @@ public class PersistableKeyValueDatabase
 		{
 			Log.i(LTAG, "Instance initialized!");
 		}
-	}
-
-	public String getDBName(){
-		return this.dbName;
-	}
-	
-	public String getLTAG(){
-		return this.LTAG;
 	}
 	
 	public void setPersistInterval(int interval)
@@ -131,8 +122,7 @@ public class PersistableKeyValueDatabase
 		if(this.loadPKVDB()) return new QKVCallback(true, QKVCallback.CODE_SUCCESS, "Persistable database synchronized!");
 		else return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to synchronize!");
 	}
-
-	@Override
+	
 	public QKVCallback put(Object k, Object v)
 	{
 		if (isValidDataType(k) && isValidDataType(v))
@@ -147,7 +137,6 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	@Override
 	public Object get(Object k)
 	{
 		if (dMap.containsKey(k))
@@ -349,7 +338,6 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	@Override
 	public QKVCallback remove(Object k)
 	{
 		if (dMap.containsKey(k))
@@ -433,12 +421,12 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	public QKVCallback cbkSuccess()
+	protected QKVCallback cbkSuccess()
 	{
 		return this.isCallbackEnabled ?new QKVCallback(): null;
 	}
 
-	public QKVCallback cbkFailed(String msg)
+	protected QKVCallback cbkFailed(String msg)
 	{
 		return this.isCallbackEnabled ?new QKVCallback(false, QKVCallback.CODE_FAILED, msg): null;
 	}

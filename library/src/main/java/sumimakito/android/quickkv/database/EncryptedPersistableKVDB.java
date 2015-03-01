@@ -17,7 +17,6 @@ import sumimakito.android.quickkv.security.*;
 public class EncryptedPersistableKVDB extends PersistableKeyValueDatabase
 {
 	private String pKey=null;
-
 	private Context pContext;
 	
 	public EncryptedPersistableKVDB(Context context, String key){
@@ -51,12 +50,12 @@ public class EncryptedPersistableKVDB extends PersistableKeyValueDatabase
 		String rawData = super.dump();
 		try
 		{
-			FileOutputStream kvdbFos = this.pContext.openFileOutput(super.getDBName() == null ?QKVConfig.PKVDB_FILENAME: super.getDBName(), Context.MODE_PRIVATE);
+			FileOutputStream kvdbFos = this.pContext.openFileOutput(super.dbName == null ?QKVConfig.PKVDB_FILENAME: super.dbName, Context.MODE_PRIVATE);
 			kvdbFos.write(pKey!=null?AES256.encode(pKey, rawData).getBytes():rawData.getBytes());
 			kvdbFos.close();
 			if (QKVConfig.DEBUG)
 			{
-				Log.i(super.getLTAG(), "Key-value database persisted!");
+				Log.i(super.LTAG, "Key-value database persisted!");
 			}
 			return super.cbkSuccess();
 		}
@@ -76,7 +75,7 @@ public class EncryptedPersistableKVDB extends PersistableKeyValueDatabase
 		}
 		try
 		{
-			FileInputStream kvdbFis = this.pContext.openFileInput(super.getDBName() == null ?QKVConfig.PKVDB_FILENAME: super.getDBName());
+			FileInputStream kvdbFis = this.pContext.openFileInput(super.dbName == null ?QKVConfig.PKVDB_FILENAME: super.dbName);
 			byte[] bytes = new byte[1024];  
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 			while (kvdbFis.read(bytes) != -1)
@@ -87,12 +86,12 @@ public class EncryptedPersistableKVDB extends PersistableKeyValueDatabase
 			baos.close();  
 			String rawData = AES256.decode(pKey, new String(baos.toByteArray()));
 
-			FileOutputStream kvdbFos = this.pContext.openFileOutput(super.getDBName() == null ?QKVConfig.PKVDB_FILENAME: super.getDBName(), Context.MODE_PRIVATE);
+			FileOutputStream kvdbFos = this.pContext.openFileOutput(super.dbName == null ?QKVConfig.PKVDB_FILENAME: super.dbName, Context.MODE_PRIVATE);
 			kvdbFos.write(rawData.getBytes());
 			kvdbFos.close();
 			if (QKVConfig.DEBUG)
 			{
-				Log.i(super.getLTAG(), "KVDB decrypted!");
+				Log.i(super.LTAG, "KVDB decrypted!");
 			}
 			return super.cbkSuccess();
 		}
