@@ -1,3 +1,11 @@
+/**      
+ * QucikKV
+ * Copyright (c) 2014-2015 Sumi Makito
+ * Licensed under GNU GPL v3 License.
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.7
+ */
+
 package sumimakito.android.quickkv.database;
 
 import android.content.*;
@@ -110,11 +118,10 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	public void sync()
+	public QKVCallback sync()
 	{
-		this.loadPKVDB();
-
-		Log.i(QKVConfig.PUBLIC_LTAG, "Persistable database synchronized!");
+		if(this.loadPKVDB()) return new QKVCallback(true, QKVCallback.CODE_SUCCESS, "Persistable database synchronized!");
+		else return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to synchronize!");
 	}
 
 	@Override
@@ -165,7 +172,7 @@ public class PersistableKeyValueDatabase
 		}
 	}
 
-	private void loadPKVDB()
+	private boolean loadPKVDB()
 	{
 		try
 		{
@@ -189,12 +196,14 @@ public class PersistableKeyValueDatabase
 			{
 				Log.i(LTAG, "Database file is empty!");
 			}
+			return true;
 		}
 		catch (Exception e)
 		{
 			if(QKVConfig.DEBUG){
 				e.printStackTrace();
 			}
+			return false;
 		}
 	}
 
@@ -424,5 +433,47 @@ public class PersistableKeyValueDatabase
 	private QKVCallback cbkFailed(String msg)
 	{
 		return this.isCallbackEnabled ?new QKVCallback(false, QKVCallback.CODE_FAILED, msg): null;
+	}
+	
+	public boolean hasKey(Object k)
+	{
+		return this.dMap.containsKey(k);
+	}
+
+	public boolean hasValue(Object v)
+	{
+		return this.dMap.containsValue(v);
+	}
+
+	public List<Object> getKeys()
+	{
+		List<Object> list = new ArrayList<Object>();
+		if (this.dMap.size() > 0)
+		{
+			Iterator iter = dMap.entrySet().iterator(); 
+			while (iter.hasNext())
+			{ 
+				Map.Entry entry = (Map.Entry) iter.next(); 
+				Object key = entry.getKey(); 
+				list.add(key);
+			} 
+		}
+		return list;
+	}
+
+	public List<Object> getValues()
+	{
+		List<Object> list = new ArrayList<Object>();
+		if (this.dMap.size() > 0)
+		{
+			Iterator iter = dMap.entrySet().iterator(); 
+			while (iter.hasNext())
+			{ 
+				Map.Entry entry = (Map.Entry) iter.next(); 
+				Object value = entry.getValue(); 
+				list.add(value);
+			} 
+		}
+		return list;
 	}
 }

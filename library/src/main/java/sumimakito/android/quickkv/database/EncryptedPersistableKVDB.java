@@ -1,3 +1,11 @@
+/**      
+ * QucikKV
+ * Copyright (c) 2014-2015 Sumi Makito
+ * Licensed under GNU GPL v3 License.
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.7
+ */
+ 
 package sumimakito.android.quickkv.database;
 
 import android.content.*;
@@ -27,9 +35,10 @@ public class EncryptedPersistableKVDB extends PersistableKeyValueDatabase
 	}
 
 	@Override
-	public void sync()
+	public QKVCallback sync()
 	{
-		// Do nothing...
+		// Sync in encrypted pkvdb is not allowed
+		return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to synchronize!");
 	}
 
 	@Override

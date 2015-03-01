@@ -1,3 +1,11 @@
+/**      
+ * QucikKV
+ * Copyright (c) 2014-2015 Sumi Makito
+ * Licensed under GNU GPL v3 License.
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.7
+ */
+
 package sumimakito.android.quickkv;
 
 import android.content.*;
@@ -148,7 +156,7 @@ public class QuickKV
 		{
 			kvdbMap.remove(dbAlias);
 		}
-		else
+		else if(QKVConfig.DEBUG)
 		{
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release kvdb: No opened database matches the given alias \"" + dbAlias + "\"!");
 		}
@@ -160,7 +168,7 @@ public class QuickKV
 		{
 			pKVDBMap.remove(dbName);
 		}
-		else
+		else if(QKVConfig.DEBUG)
 		{
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release persistable kvdb: No opened database matches the given name \"" + dbName + "\"!");
 		}
@@ -172,7 +180,7 @@ public class QuickKV
 		{
 			ecPKVDBMap.remove(dbName);
 		}
-		else
+		else if(QKVConfig.DEBUG)
 		{
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release encrypted persistable kvdb: No opened database matches the given name \"" + dbName + "\"!");
 		}

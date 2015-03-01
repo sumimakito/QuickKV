@@ -1,3 +1,11 @@
+/**      
+ * QucikKV
+ * Copyright (c) 2014-2015 Sumi Makito
+ * Licensed under GNU GPL v3 License.
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.7
+ */
+
 package sumimakito.android.quickkv;
 
 import android.util.*;
@@ -24,7 +32,8 @@ public class QKVCallback
 		this.msg = msg;
 		if (QKVConfig.DEBUG)
 		{
-			Log.w(QKVConfig.PUBLIC_LTAG, this.msg);
+			if(success) Log.i(QKVConfig.PUBLIC_LTAG, this.msg);
+			else Log.w(QKVConfig.PUBLIC_LTAG, this.msg);
 		}
 	}	
 	public boolean success()
