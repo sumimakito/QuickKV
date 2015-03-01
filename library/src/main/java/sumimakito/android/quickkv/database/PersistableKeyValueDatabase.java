@@ -7,8 +7,9 @@ import sumimakito.android.quickkv.*;
 import java.io.*;
 import org.json.*;
 import sumimakito.android.quickkv.security.*;
+import sumimakito.android.quickkv.util.*;
 
-public class PersistableKeyValueDatabase extends ADatabase
+public class PersistableKeyValueDatabase
 {
 	private static String LTAG;
 	private HashMap<Object, Object> dMap;
@@ -17,9 +18,11 @@ public class PersistableKeyValueDatabase extends ADatabase
 	private int opStep = 0;
 	private String dbName = null;
 	private String pKey = null;
+	private boolean isCallbackEnabled;
 
 	public PersistableKeyValueDatabase(Context context)
 	{
+		this.dbName = QKVConfig.PKVDB_FILENAME;
 		this.pContext = context;
 		this.LTAG = "_" + this.getClass().getSimpleName();
 		this.dMap = new HashMap<Object, Object>();
@@ -43,12 +46,6 @@ public class PersistableKeyValueDatabase extends ADatabase
 		}
 	}
 
-	public void setEncryptionKey(String keyString)
-	{
-		this.pKey = keyString;
-		loadPKVDB();
-	}
-
 	public void setPersistInterval(int interval)
 	{
 		if (interval >= 0)
@@ -61,24 +58,77 @@ public class PersistableKeyValueDatabase extends ADatabase
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to set persist interval: Interval cannot less than 0!");
 		}
 	}
+
+	public void setCallbackEnabled(boolean enabled)
+	{
+		this.isCallbackEnabled = enabled;
+	}
 	
-	public void sync(){
+	public String dump()
+	{
+		if (this.dMap.size() > 0)
+		{
+			try
+			{
+				JSONObject treeRoot = new JSONObject();
+				Iterator iter = this.dMap.entrySet().iterator(); 
+				while (iter.hasNext())
+				{ 
+					Map.Entry entry = (Map.Entry) iter.next(); 
+					Object key = entry.getKey(); 
+					Object val = entry.getValue(); 
+
+					treeRoot.put(addPrefix(key), addPrefix(val));
+				} 
+				return treeRoot.toString();
+			}
+			catch (Exception e)
+			{
+				if (QKVConfig.DEBUG)
+				{
+					Log.w(QKVConfig.PUBLIC_LTAG, "Failed to dump current key-value database.");
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}
+		else
+		{
+			try
+			{
+				return new JSONObject().toString();
+			}
+			catch (Exception e)
+			{
+				if (QKVConfig.DEBUG)
+				{
+					Log.w(QKVConfig.PUBLIC_LTAG, "Failed to dump current key-value database.");
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+	}
+
+	public void sync()
+	{
 		this.loadPKVDB();
+
 		Log.i(QKVConfig.PUBLIC_LTAG, "Persistable database synchronized!");
 	}
 
 	@Override
-	public void put(Object k, Object v)
+	public QKVCallback put(Object k, Object v)
 	{
 		if (isValidDataType(k) && isValidDataType(v))
 		{
 			this.dMap.put(k, v);
 			nextStep();
+			return cbkSuccess();
 		}
 		else
 		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to put the key " + k + "\": Type of the key or value is not allowed!");
-			Log.w(QKVConfig.PUBLIC_LTAG, "While using a persistable database, you can only put String,Integer,Long,Double,Float,Boolean,JSONObject,JSONArray as the type of a key or value.");
+			return cbkFailed("Failed to put key \"" + k + "\" and value \"" + v + "\": Invalid data type!");
 		}
 	}
 
@@ -91,7 +141,10 @@ public class PersistableKeyValueDatabase extends ADatabase
 		}
 		else
 		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to get the value for the key \"" + k + "\": Key doesn't exist!");
+			if (QKVConfig.DEBUG)
+			{
+				Log.w(QKVConfig.PUBLIC_LTAG, "Failed to get the value for the key \"" + k + "\": Key doesn't exist!");
+			}
 			return null;
 		}
 	}
@@ -118,19 +171,19 @@ public class PersistableKeyValueDatabase extends ADatabase
 		{
 			this.dMap.clear();
 			FileInputStream kvdbFis = pContext.openFileInput(dbName == null ?QKVConfig.PKVDB_FILENAME: dbName);
-			byte[] bytes = new byte[1024];  
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-            while (kvdbFis.read(bytes) != -1)
-			{  
-                baos.write(bytes, 0, bytes.length);  
-            }  
-            kvdbFis.close();  
-            baos.close();  
-			String rawData = pKey == null ?new String(baos.toByteArray()): AES256.decode(pKey, new String(baos.toByteArray()));
+			String rawData = FISReader.read(kvdbFis);
+			if (QKVConfig.DEBUG)
+			{
+				Log.i(LTAG, "Database raw:\n"+rawData);
+			}
 			if (rawData.length() > 0)
 			{
-				JSONObject treeRoot = new JSONObject();
+				JSONObject treeRoot = new JSONObject(rawData);
 				parseJTree(treeRoot);
+				if (QKVConfig.DEBUG)
+				{
+					Log.i(LTAG, "Database file loaded!");
+				}
 			}
 			else if (QKVConfig.DEBUG)
 			{
@@ -139,16 +192,9 @@ public class PersistableKeyValueDatabase extends ADatabase
 		}
 		catch (Exception e)
 		{
-			if (pKey == null)
-			{
-				Log.w(LTAG, "This database is might encrypted! You need to use setEncryptionKey(String keyString) to apply the key for decryption.");
+			if(QKVConfig.DEBUG){
+				e.printStackTrace();
 			}
-			else
-			{
-				Log.w(LTAG, "Maybe the decryption key is incorrect!");
-			}
-			Log.w(LTAG, "Failed to load persisted database, maybe it is a new database or database name is incorrect or database is broken!");
-			Log.w(LTAG, "QuickKV will automatically ignore this problem by creating a new database and overwrite the old one(if possible).");
 		}
 	}
 
@@ -164,13 +210,17 @@ public class PersistableKeyValueDatabase extends ADatabase
 				Object k = dePrefix(key);
 				Object v = dePrefix(val);
 				this.dMap.put(k, v);
+				if (QKVConfig.DEBUG)
+				{
+					Log.w(QKVConfig.PUBLIC_LTAG, "JParser: K="+k+" V="+v);
+				}
 			}
 		}
 		catch (Exception e)
 		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to parse the database file!");
 			if (QKVConfig.DEBUG)
 			{
+				Log.w(QKVConfig.PUBLIC_LTAG, "Failed to parse the database file!");
 				e.printStackTrace();
 			}
 		}
@@ -283,16 +333,17 @@ public class PersistableKeyValueDatabase extends ADatabase
 	}
 
 	@Override
-	public void remove(Object k)
+	public QKVCallback remove(Object k)
 	{
 		if (dMap.containsKey(k))
 		{
 			this.dMap.remove(k);
 			nextStep();
+			return cbkSuccess();
 		}
 		else
 		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to remove the key \"" + k + "\" and its value: Key doesn't exist!");
+			return cbkFailed("Failed to remove the key \"" + k + "\" and its value: Key doesn't exist!");
 		}
 	}
 
@@ -306,7 +357,7 @@ public class PersistableKeyValueDatabase extends ADatabase
 		}
 	}
 
-	public void persist()
+	public QKVCallback persist()
 	{
 		if (this.dMap.size() > 0)
 		{
@@ -323,17 +374,21 @@ public class PersistableKeyValueDatabase extends ADatabase
 					treeRoot.put(addPrefix(key), addPrefix(val));
 				} 
 				FileOutputStream kvdbFos = pContext.openFileOutput(dbName == null ?QKVConfig.PKVDB_FILENAME: dbName, Context.MODE_PRIVATE);
-				kvdbFos.write(pKey == null ?treeRoot.toString().getBytes(): AES256.encode(pKey, treeRoot.toString()).getBytes());
+				kvdbFos.write(treeRoot.toString().getBytes());
 				kvdbFos.close();
-				Log.i(LTAG, "Key-value database persisted!");
+				if (QKVConfig.DEBUG)
+				{
+					Log.i(LTAG, "Key-value database persisted!");
+				}
+				return cbkSuccess();
 			}
 			catch (Exception e)
 			{
-				Log.w(QKVConfig.PUBLIC_LTAG, "Failed to persist current key-value database.");
 				if (QKVConfig.DEBUG)
 				{
 					e.printStackTrace();
 				}
+				return cbkFailed("Failed to persist current key-value database.");
 			}
 		}
 		else
@@ -343,16 +398,31 @@ public class PersistableKeyValueDatabase extends ADatabase
 				FileOutputStream kvdbFos = pContext.openFileOutput(dbName == null ?QKVConfig.PKVDB_FILENAME: dbName, Context.MODE_PRIVATE);
 				kvdbFos.write("".getBytes());
 				kvdbFos.close();
-				Log.i(LTAG, "Key-value database persisted!");
+				if (QKVConfig.DEBUG)
+				{
+					Log.i(LTAG, "Key-value database persisted!");
+				}
+				return cbkSuccess();
 			}
 			catch (Exception e)
 			{
-				Log.w(QKVConfig.PUBLIC_LTAG, "Failed to persist current key-value database.");
+
 				if (QKVConfig.DEBUG)
 				{
 					e.printStackTrace();
 				}
+				return cbkFailed("Failed to persist current key-value database.");
 			}
 		}
+	}
+
+	private QKVCallback cbkSuccess()
+	{
+		return this.isCallbackEnabled ?new QKVCallback(): null;
+	}
+
+	private QKVCallback cbkFailed(String msg)
+	{
+		return this.isCallbackEnabled ?new QKVCallback(false, QKVCallback.CODE_FAILED, msg): null;
 	}
 }
