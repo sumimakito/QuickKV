@@ -12,6 +12,8 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 
 ### Current version 当前版本
 
+##### 0.7 
+
 ##### 0.6
 
 ### Features 特性
@@ -47,6 +49,8 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 [百度云](http://pan.baidu.com/share/link?shareid=1713766086&uk=1479848638)
 
 ### Usage 用法
+
+> IMPORTANT!! This document is written for 0.6 version, please wait for the latest document. 这个文档是为0.6版本而写，需要更新，请耐心等待更新。
 
 *First add jar file to your build path. 首先在Build Path中加入JAR文件。*
 
