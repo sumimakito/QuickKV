@@ -12,6 +12,9 @@ import android.content.*;
 import java.util.*;
 import sumimakito.android.quickkv.database.*;
 import android.util.*;
+import java.io.*;
+import sumimakito.android.quickkv.util.*;
+import sumimakito.android.quickkv.security.*;
 
 public class QuickKV
 {
@@ -20,8 +23,6 @@ public class QuickKV
 	private KeyValueDatabase kvDB;
 	private Map<String, PersistableKeyValueDatabase> pKVDBMap;
 	private HashMap<String, KeyValueDatabase> kvdbMap;
-	private HashMap<String, EncryptedPersistableKVDB> ecPKVDBMap;
-	private EncryptedPersistableKVDB ecPKVDB;
 
 	public QuickKV(Context context)
 	{
@@ -30,7 +31,6 @@ public class QuickKV
 		this.pKVDB = new PersistableKeyValueDatabase(pContext);
 		this.pKVDBMap = new HashMap<String, PersistableKeyValueDatabase>();
 		this.kvdbMap = new HashMap<String, KeyValueDatabase>();
-		this.ecPKVDBMap = new HashMap<String, EncryptedPersistableKVDB>();
 	}
 
 	public PersistableKeyValueDatabase getDefaultPersistableKVDB()
@@ -45,18 +45,12 @@ public class QuickKV
 
 	public PersistableKeyValueDatabase getPersistableKVDB(String dbName)
 	{
-		if((dbName + ".kv").equals(QKVConfig.ECPKVDB_FILENAME)){
-			return null;
-		}
 		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
 		{
 			return this.pKVDB;
 		}
 		else
 		{
-			if(isEncrpytedPersistableKVDBOpened(dbName)){
-				return null;
-			}
 			if (!this.pKVDBMap.containsKey(dbName))
 			{
 				PersistableKeyValueDatabase pkvd = new PersistableKeyValueDatabase(pContext, dbName);
@@ -76,56 +70,86 @@ public class QuickKV
 		return this.kvDB;
 	}
 
-	public EncryptedPersistableKVDB getDefaultEncryptedPersistableKVDB(String key)
+	public QKVCallback encryptPersistableKVDB(String dbName, String key)
 	{
-		if (this.ecPKVDB == null)
+		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
 		{
-			this.ecPKVDB = new EncryptedPersistableKVDB(pContext, key);
+			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Default database cannot be encrypted!");
 		}
-		return this.ecPKVDB;
-	}
-
-	public EncryptedPersistableKVDB getEncryptedKVDB(String dbName, String key)
-	{
-		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME)||(dbName + ".kv").equals(QKVConfig.ECPKVDB_FILENAME))
+		else if (key == null || key.length() == 0)
 		{
-			if (this.ecPKVDB == null)
-			{
-				this.ecPKVDB = new EncryptedPersistableKVDB(pContext, key);
-			}
-			return this.ecPKVDB;
-		}
-		else if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
-		{
-			return null;
+			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Key is invalid!");
 		}
 		else
 		{
-			if (isPersistableKVDBOpened(dbName))
+			try
 			{
-				return null;
+				FileInputStream fis = pContext.openFileInput(dbName + ".kv");
+				String fcontent = FISReader.read(fis);
+				if (fcontent.startsWith(QKVConfig.EC_PREFIX))
+				{
+					return new QKVCallback(false, QKVCallback.CODE_FAILED, "Database already encrypted!");
+				}
+				else
+				{
+					String rawStr = QKVConfig.EC_PREFIX + AES256.encode(key, fcontent);
+					FileOutputStream fos = pContext.openFileOutput(dbName + ".kv", Context.MODE_PRIVATE);
+					fos.write(rawStr.getBytes());
+					fos.close();
+					return new QKVCallback();
+				}
 			}
-			if (!this.ecPKVDBMap.containsKey(dbName))
+			catch (Exception e)
 			{
-				EncryptedPersistableKVDB epkvd = new EncryptedPersistableKVDB(pContext, dbName, key);
-				this.ecPKVDBMap.put(dbName, epkvd);
+				if (QKVConfig.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to encrypt.");
 			}
-			return this.ecPKVDBMap.get(dbName);
 		}
 	}
 
-	public boolean isEncrpytedPersistableKVDBOpened(String dbName)
+	public QKVCallback decryptPersistableKVDB(String dbName, String key)
 	{
-		if (this.ecPKVDBMap.containsKey(dbName))
+		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
 		{
-			return true;
+			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Default database cannot be decrypted!");
+		}
+		else if (key == null || key.length() == 0)
+		{
+			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Key is invalid!");
 		}
 		else
 		{
-			return false;
+			try
+			{
+				FileInputStream fis = pContext.openFileInput(dbName + ".kv");
+				String fcontent = FISReader.read(fis);
+				if (fcontent.startsWith(QKVConfig.EC_PREFIX))
+				{
+					String rawStr = AES256.decode(key, fcontent.substring(QKVConfig.EC_PREFIX.length()));
+					FileOutputStream fos = pContext.openFileOutput(dbName + ".kv", Context.MODE_PRIVATE);
+					fos.write(rawStr.getBytes());
+					fos.close();
+					return new QKVCallback();
+				}
+				else
+				{
+					return new QKVCallback(false, QKVCallback.CODE_FAILED, "No a valid encrypted database!");
+				}
+			}
+			catch (Exception e)
+			{
+				if (QKVConfig.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to decrypt.");
+			}
 		}
 	}
-
+	
 	public boolean isPersistableKVDBOpened(String dbName)
 	{
 		if (this.pKVDBMap.containsKey(dbName))
@@ -156,7 +180,7 @@ public class QuickKV
 		{
 			kvdbMap.remove(dbAlias);
 		}
-		else if(QKVConfig.DEBUG)
+		else if (QKVConfig.DEBUG)
 		{
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release kvdb: No opened database matches the given alias \"" + dbAlias + "\"!");
 		}
@@ -168,21 +192,9 @@ public class QuickKV
 		{
 			pKVDBMap.remove(dbName);
 		}
-		else if(QKVConfig.DEBUG)
+		else if (QKVConfig.DEBUG)
 		{
 			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release persistable kvdb: No opened database matches the given name \"" + dbName + "\"!");
-		}
-	}
-
-	public void releaseEncryptedPersistableKVDB(String dbName)
-	{
-		if (this.ecPKVDBMap.containsKey(dbName))
-		{
-			ecPKVDBMap.remove(dbName);
-		}
-		else if(QKVConfig.DEBUG)
-		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release encrypted persistable kvdb: No opened database matches the given name \"" + dbName + "\"!");
 		}
 	}
 
@@ -194,10 +206,5 @@ public class QuickKV
 	public void releaseAllPersistableKVDB()
 	{
 		this.pKVDBMap.clear();
-	}
-
-	public void releaseAllEncryptedPersistableKVDB()
-	{
-		this.ecPKVDBMap.clear();
 	}
 }

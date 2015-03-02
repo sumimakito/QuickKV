@@ -72,7 +72,7 @@ public class KeyValueDatabase extends ADatabase
 		this.dMap.clear();
 		if (QKVConfig.DEBUG)
 		{
-			Log.i(LTAG, "Data map cleared!");
+			Log.i(LTAG, "Database cleared!");
 		}
 	}
 
