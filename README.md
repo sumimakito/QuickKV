@@ -4,6 +4,8 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 为Android项目提供的轻量且易用的键值数据库
 
+*English &amp; Chinese API Documentation Available! 含有中文/英文API文档*
+
 ### Preface 前言
 
 Map and List are too complex to initialize. Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
@@ -52,7 +54,7 @@ pkvdb2.get("Key");
 //输出: "Value"
 ```
 
-> Do more task in fewer words. This QuickKV!
+> Do more tasks in fewer words. This QuickKV!
 > 代码更短，却能完成多个任务，这就是QuickKV！
 
 ### Current version 当前版本
@@ -61,7 +63,7 @@ pkvdb2.get("Key");
 
 ### Features 特性
 
-* Allow nearly all types key and value 几乎支持所有类型的键与值
+* Allow nearly all type of keys and values 几乎支持所有类型的键与值
 
 * High performance 高性能
 
