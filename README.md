@@ -75,11 +75,11 @@ pkvdb2.get("Key");
 
 ### Download 下载
 
-##### JAR File JAR文件
+##### JAR File JAR文件 (v0.6+)
 
 [CR-α 代码仓库](http://repo.keep.moe/static/?dir=QuickKV)
 
-##### Demo 演示
+##### Demo 演示 (v0.6)
 
 [Dropbox](https://www.dropbox.com/s/53b86j9xuhpw9f1/QuickKVDemo.apk?dl=0)
 
@@ -88,8 +88,6 @@ pkvdb2.get("Key");
 [百度云](http://pan.baidu.com/share/link?shareid=1713766086&uk=1479848638)
 
 ### Usage 用法
-
-> IMPORTANT!! This document is written for 0.6 version, please wait for the latest document. 这个文档是为0.6版本而写，需要更新，请耐心等待更新。
 
 *First add jar file to your build path. 首先在Build Path中加入JAR文件。*
 
