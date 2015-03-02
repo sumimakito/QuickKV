@@ -6,9 +6,54 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 ### Preface 前言
 
-Map and List is too complex to initialize.Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
+Map and List are too complex to initialize. Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
 
 Map和List的初始化很复杂。事实上，我们只需要关注键与值就够了。于是，QuickKV诞生了。
+
+* HashMap &amp; JSON
+
+```java
+//Put data in a hashmap and save it to the local storage.
+//在HashMap中放入数据并存储至本地存储器。
+Map<Object, Object> map = new HashMap<Object, Object>();
+map.put("Key","Value");
+JSONObject json = new JSONObject();
+Iterator iter = map.entrySet().iterator(); 
+while (iter.hasNext())
+{
+    Map.Entry entry = (Map.Entry) iter.next(); 
+    Object key = entry.getKey();
+    Object value = entry.getValue();
+    json.put(key.toString(), value.toString());
+}
+FileOutputStream fos = this.openFileOutput("data.json", Context.MODE_PRIVATE);
+fos.write(json.toString().getBytes());
+fos.close();
+//Load saved data from local storage and parse it, then convert it to a HashMap is more complex.
+//从存储器中载入已保存的数据并解析、转换为HashMap就更加复杂了。
+```
+
+* QuickKV
+
+```java
+//Do the same thing with QuickKV
+//用QuickKV做同样的事情
+QuickKV quickKv = new QuickKV(this);
+PersistableKeyValueDatabase pkvdb1 = quickKv.getPersistableKVDB("Foo");
+pkvdb1.put("Key", "Value");
+pkvdb1.persist();
+//Done! Saved to local storage!
+//完成！已保存至本地存储器！
+//Let try to load this saved database!
+//让我们来试试载入这个保存好的数据库！
+PersistableKeyValueDatabase pkvdb2 = quickKv.getPersistableKVDB("Foo");
+pkvdb2.get("Key");
+//Output: "Value"
+//输出: "Value"
+```
+
+> Do more task in fewer words. This QuickKV!
+> 代码更短，却能完成多个任务，这就是QuickKV！
 
 ### Current version 当前版本
 
@@ -25,12 +70,6 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 * Persistable 可持久化
 
 * Support AES256 encryption(experimental) 支持AES256加密(实验功能)
-
-### TODO 目标
-
-* Dump raw persistable database
-
-* AES256 Encryption(Improvement)
 
 ### Download 下载
 
