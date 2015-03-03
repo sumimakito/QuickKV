@@ -73,6 +73,12 @@ pkvdb2.get("Key");
 
 * Support AES256 encryption(experimental) 支持AES256加密(实验功能)
 
+### TODO 任务与目标
+
+* Improve performance 提高处理性能
+
+* Solutions for processing huge data 考虑处理巨量数据的方案
+
 ### Download 下载
 
 ##### JAR File JAR文件 (v0.6+)
@@ -244,6 +250,9 @@ pkvdb.persist(); //Then persist it
 #### Multi-database management 多数据库管理
 
 ##### Encryption 加密
+
+> Due to the known issues, this feature might be removed in the future.
+> 由于已知的逻辑性问题，这个功能可能会在将来被移除。
 
 *Experimental 实验功能*
 
