@@ -59,7 +59,7 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.7 
+#### 0.7
 
 ### Features 特性
 
@@ -74,6 +74,8 @@ pkvdb2.get("Key");
 * Support AES256 encryption(experimental) 支持AES256加密(实验功能)
 
 ### TODO 任务与目标
+
+* Discard persist database as JSON 弃用以JSON形式序列化存储
 
 * Improve performance 提高处理性能
 
@@ -316,8 +318,8 @@ qucikKv.isPersistableKVDBOpened("dbName");
 
 ### Copyright 版权信息
 
-Copyright (C) 2014-2015 SumiMakito(RDGroup).
+Copyright &copy; 2014-2015 SumiMakito (RDGroup)
 
-Licensed under GNU GPL v3.
+Licensed under GNU GPL v3 License.
 
 [Read License](LICENSE)
