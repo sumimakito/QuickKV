@@ -6,6 +6,8 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 *English &amp; Chinese API Documentation Available! 含有中文/英文API文档*
 
+## New version 0.8 is coming soon on Mar. 6th!
+
 ### Preface 前言
 
 Map and List are too complex to initialize. Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
