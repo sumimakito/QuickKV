@@ -3,87 +3,137 @@
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under GNU GPL v3 License.
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.7
+ * @version 0.8
  */
 
 package sumimakito.android.quickkv.database;
 
+import android.content.*;
+import android.util.*;
+import java.io.*;
 import java.util.*;
 import sumimakito.android.quickkv.*;
-import android.util.*;
+import net.minidev.json.*;
+import net.minidev.json.parser.*;
+import sumimakito.android.quickkv.security.*;
 
-public class KeyValueDatabase extends ADatabase
+public class KeyValueDatabase implements QKVDatabase
 {
-	private static String LTAG;
 	private HashMap<Object, Object> dMap;
+	private Context pContext;
+	private String dbAlias;
 
-	public KeyValueDatabase()
+	private String pKey;
+
+	public KeyValueDatabase(Context context)
 	{
-		this.LTAG = "_" + this.getClass().getSimpleName();
+		this.pContext = context;
+		this.dbAlias = QKVConfig.KVDB_FILE_NAME;
 		this.dMap = new HashMap<Object, Object>();
-		if (QKVConfig.DEBUG)
-		{
-			Log.i(LTAG, "Data map created!");
-		}
+		this.sync(false);
+		QKVLogger.log("i", "KVDB Initialized!");
+	}
+
+	public KeyValueDatabase(Context context, String dbAlias)
+	{
+		this.pContext = context;
+		this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
+		this.dMap = new HashMap<Object, Object>();
+		this.sync(false);
+		QKVLogger.log("i", "KVDB Initialized!");
+	}
+
+	public KeyValueDatabase(Context context, String dbAlias, String key)
+	{
+		this.pKey = key;
+		this.pContext = context;
+		this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
+		this.dMap = new HashMap<Object, Object>();
+		this.sync(false);
+		QKVLogger.log("i", "KVDB Initialized!");
 	}
 
 	@Override
-	public void put(Object k, Object v)
+	public <K extends Object, V extends Object> boolean put(K k, V v)
 	{
+		if (k == null || v == null)
+		{
+			return false;
+		}
 		this.dMap.put(k, v);
-		if (QKVConfig.DEBUG)
-		{
-			Log.i(LTAG, "put(): K=" + k + " V=" + v);
-		}
+		return true;
 	}
 
 	@Override
-	public Object get(Object k)
+	public <K extends Object> Object get(K k)
 	{
-		if (dMap.containsKey(k))
+		if (k == null)
 		{
-			return this.dMap.get(k);
-		}
-		else
-		{
-			if (QKVConfig.DEBUG)
-			{
-				Log.w(QKVConfig.PUBLIC_LTAG, "Failed to get the value for the key \"" + k + "\": Key doesn't exist!");
-			}
 			return null;
 		}
+		if (this.dMap.containsKey(k)) return this.dMap.get(k);
+		else return null;
 	}
 
 	@Override
-	public void remove(Object k)
+	public <K extends Object> boolean containsKey(K k)
 	{
-		if (dMap.containsKey(k))
-		{
-			this.dMap.remove(k);
-		}
-		else if (QKVConfig.DEBUG)
-		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to remove the key \"" + k + "\" and its value: Key doesn't exist!");
-		}
+		if (this.dMap.containsKey(k)) return true;
+		else return false;
 	}
 
+	@Override
+	public <V extends Object> boolean containsValue(V v)
+	{
+		if (this.dMap.containsValue(v)) return true;
+		else return false;
+	}
+
+	@Override
+	public <K extends Object> boolean remove(K k)
+	{
+		if (k == null)
+		{
+			return false;
+		}
+		if (this.dMap.containsKey(k)) 
+		{
+			this.dMap.remove(k);
+			return true;
+		}
+		else return false;
+	}
+
+	@Override
+	public <K extends Object> boolean remove(K[] k)
+	{
+		if (k == null || k.length == 0)
+		{
+			return false;
+		}
+		int r = 0;
+		for (K key:k)
+		{
+			if (this.dMap.containsKey(key))
+			{
+				this.dMap.remove(key);
+				r++;
+			}
+		}
+		if (r < k.length) return false;
+		else return true;
+	}
+
+	@Override
 	public void clear()
 	{
 		this.dMap.clear();
-		if (QKVConfig.DEBUG)
-		{
-			Log.i(LTAG, "Database cleared!");
-		}
 	}
 
-	public boolean hasKey(Object k)
+	@Override
+	public int size()
 	{
-		return this.dMap.containsKey(k);
-	}
-
-	public boolean hasValue(Object v)
-	{
-		return this.dMap.containsValue(v);
+		return this.dMap.size();
 	}
 
 	public List<Object> getKeys()
@@ -116,5 +166,119 @@ public class KeyValueDatabase extends ADatabase
 			} 
 		}
 		return list;
+	}
+
+	public boolean persist()
+	{
+		if (this.dMap.size() > 0)
+		{
+			try
+			{
+				JSONObject treeRoot = new JSONObject();
+				treeRoot.put("kv_prop", new JSONObject());
+				JSONObject propRoot = (JSONObject) treeRoot.get("kv_prop");
+				propRoot.put("strc_ver", "0.8@3");
+				propRoot.put("enc_enabled", (this.pKey!=null&&this.pKey.length()>0));
+				treeRoot.put("kv_data", new JSONObject());
+				JSONObject dataRoot = (JSONObject) treeRoot.get("kv_data");
+				Iterator iter = this.dMap.entrySet().iterator(); 
+				while (iter.hasNext())
+				{ 
+					Map.Entry entry = (Map.Entry) iter.next(); 
+					Object key = entry.getKey(); 
+					Object val = entry.getValue(); 
+					if (DataProcessor.Persistable.isValidDataType(key)
+						&& DataProcessor.Persistable.isValidDataType(val))
+					{
+						if (this.pKey != null && this.pKey.length() > 0) dataRoot.put(AES256.encode(this.pKey, DataProcessor.Persistable.addPrefix(key)), AES256.encode(this.pKey, DataProcessor.Persistable.addPrefix(val)));
+						else dataRoot.put(DataProcessor.Persistable.addPrefix(key), DataProcessor.Persistable.addPrefix(val));
+					}
+				} 
+				FileOutputStream kvdbFos = pContext.openFileOutput(dbAlias == null ?QKVConfig.KVDB_FILE_NAME: dbAlias, Context.MODE_PRIVATE);
+				kvdbFos.write(treeRoot.toString().getBytes());
+				kvdbFos.close();
+				return true;
+			}
+			catch (Exception e)
+			{
+				QKVLogger.ex(e);
+				return false;
+			}
+		}
+		else return true;
+	}
+
+	public boolean sync()
+	{
+		return this.sync(true);
+	}
+
+	public boolean sync(boolean merge)
+	{
+		try
+		{
+			if (!merge)
+			{
+				this.dMap.clear();
+			}
+			File kvdbFile = new File(pContext.getFilesDir(), dbAlias == null ? QKVConfig.KVDB_FILE_NAME: dbAlias);
+			String rawData = QKVFSReader.readFileBFD(kvdbFile.getAbsolutePath());
+			if (rawData.length() > 0)
+			{
+				JSONObject treeRoot = (JSONObject) JSONValue.parse(rawData);
+				if (parseKVJS((JSONObject) treeRoot.get("kv_data"))) return true;
+				else return false;
+			}
+			return true;
+		}
+		catch (Exception e)
+		{
+			QKVLogger.ex(e);
+			return false;
+		}
+	}
+
+	public boolean enableEncryption(String key){
+		if(key!=null&&key.length()>0){
+			this.pKey = key;
+			persist();
+			return true;
+		}else return false;
+	}
+	
+	public void disableEncryption(){
+		this.pKey=null;
+		persist();
+	}
+	
+	private boolean parseKVJS(JSONObject json)
+	{
+		try
+		{
+			Iterator<String> keys = json.keySet().iterator();
+			while (keys.hasNext())
+			{
+				String key = keys.next();
+				String val = json.get(key).toString();
+				Object k,v;
+				if (this.pKey != null && this.pKey.length() > 0)
+				{
+					k = DataProcessor.Persistable.dePrefix(AES256.decode(this.pKey, key));
+					v = DataProcessor.Persistable.dePrefix(AES256.decode(this.pKey, val));
+				}
+				else
+				{
+					k = DataProcessor.Persistable.dePrefix(key);
+					v = DataProcessor.Persistable.dePrefix(val);
+				}
+				this.dMap.put(k, v);
+			}
+			return true;
+		}
+		catch (Exception e)
+		{
+			QKVLogger.ex(e);
+			return false;
+		}
 	}
 }

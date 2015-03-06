@@ -27,6 +27,7 @@ android {
 }
 
 dependencies {
+    compile 'net.minidev:json-smart:2.1.1'
 }
 
 apply from: 'https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'

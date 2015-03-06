@@ -3,7 +3,7 @@
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under GNU GPL v3 License.
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.7
+ * @version 0.8
  */
 
 package sumimakito.android.quickkv;
@@ -13,198 +13,129 @@ import java.util.*;
 import sumimakito.android.quickkv.database.*;
 import android.util.*;
 import java.io.*;
-import sumimakito.android.quickkv.util.*;
 import sumimakito.android.quickkv.security.*;
 
 public class QuickKV
 {
 	private Context pContext;
-	private PersistableKeyValueDatabase pKVDB;
-	private KeyValueDatabase kvDB;
-	private Map<String, PersistableKeyValueDatabase> pKVDBMap;
-	private HashMap<String, KeyValueDatabase> kvdbMap;
+	private HashMap<String, KeyValueDatabase> sKVDB;
 
 	public QuickKV(Context context)
 	{
 		this.pContext = context;
-		this.kvDB = new KeyValueDatabase();
-		this.pKVDB = new PersistableKeyValueDatabase(pContext);
-		this.pKVDBMap = new HashMap<String, PersistableKeyValueDatabase>();
-		this.kvdbMap = new HashMap<String, KeyValueDatabase>();
+		this.sKVDB = new HashMap<String, KeyValueDatabase>();
 	}
 
-	public PersistableKeyValueDatabase getDefaultPersistableKVDB()
+	public KeyValueDatabase getDatabase()
 	{
-		return this.pKVDB;
-	}
-
-	public KeyValueDatabase getDefaultKVDB()
-	{
-		return this.kvDB;
-	}
-
-	public PersistableKeyValueDatabase getPersistableKVDB(String dbName)
-	{
-		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
+		if (!this.sKVDB.containsKey(QKVConfig.KVDB_FILE_NAME))
 		{
-			return this.pKVDB;
+			this.sKVDB.put(QKVConfig.KVDB_FILE_NAME, new KeyValueDatabase(pContext));
+		}
+		return this.sKVDB.get(QKVConfig.KVDB_FILE_NAME);
+	}
+
+	public KeyValueDatabase getDatabase(String dbAlias)
+	{
+		if (dbAlias.equals(QKVConfig.KVDB_NAME) || dbAlias.equals(QKVConfig.KVDB_FILE_NAME))
+		{
+			return getDatabase();
+		}
+		if (dbAlias == null)
+		{
+			return null;
 		}
 		else
 		{
-			if (!this.pKVDBMap.containsKey(dbName))
+			if (dbAlias.length() == 0)
 			{
-				PersistableKeyValueDatabase pkvd = new PersistableKeyValueDatabase(pContext, dbName);
-				this.pKVDBMap.put(dbName, pkvd);
+				dbAlias = QKVConfig.KVDB_FILE_NAME;
 			}
-			return this.pKVDBMap.get(dbName);
+			dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
 		}
+		if (!this.sKVDB.containsKey(dbAlias))
+		{
+			this.sKVDB.put(dbAlias, new KeyValueDatabase(pContext, dbAlias));
+		}
+
+		return this.sKVDB.get(dbAlias);
 	}
 
-	public KeyValueDatabase getKVDB(String dbAlias)
+	public KeyValueDatabase getDatabase(String dbAlias, String key)
 	{
-		if (!this.kvdbMap.containsKey(dbAlias))
+		if (dbAlias.equals(QKVConfig.KVDB_NAME) || dbAlias.equals(QKVConfig.KVDB_FILE_NAME))
 		{
-			KeyValueDatabase kvd = new KeyValueDatabase();
-			this.kvdbMap.put(dbAlias, kvd);
+			return getDatabase();
 		}
-		return this.kvDB;
-	}
-
-	public QKVCallback encryptPersistableKVDB(String dbName, String key)
-	{
-		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
+		if (dbAlias == null)
 		{
-			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Default database cannot be encrypted!");
-		}
-		else if (key == null || key.length() == 0)
-		{
-			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Key is invalid!");
+			return null;
 		}
 		else
 		{
-			try
+			if (dbAlias.length() == 0)
 			{
-				FileInputStream fis = pContext.openFileInput(dbName + ".kv");
-				String fcontent = FISReader.read(fis);
-				if (fcontent.startsWith(QKVConfig.EC_PREFIX))
-				{
-					return new QKVCallback(false, QKVCallback.CODE_FAILED, "Database already encrypted!");
-				}
-				else
-				{
-					String rawStr = QKVConfig.EC_PREFIX + AES256.encode(key, fcontent);
-					FileOutputStream fos = pContext.openFileOutput(dbName + ".kv", Context.MODE_PRIVATE);
-					fos.write(rawStr.getBytes());
-					fos.close();
-					return new QKVCallback();
-				}
+				dbAlias = QKVConfig.KVDB_FILE_NAME;
 			}
-			catch (Exception e)
-			{
-				if (QKVConfig.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to encrypt.");
-			}
+			dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
 		}
+		if (!this.sKVDB.containsKey(dbAlias))
+		{
+			this.sKVDB.put(dbAlias, new KeyValueDatabase(pContext, dbAlias, key));
+		}
+
+		return this.sKVDB.get(dbAlias);
 	}
 
-	public QKVCallback decryptPersistableKVDB(String dbName, String key)
+	public boolean isDatabaseOpened()
 	{
-		if ((dbName + ".kv").equals(QKVConfig.PKVDB_FILENAME))
-		{
-			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Default database cannot be decrypted!");
-		}
-		else if (key == null || key.length() == 0)
-		{
-			return new QKVCallback(false, QKVCallback.CODE_FAILED, "Key is invalid!");
-		}
-		else
-		{
-			try
-			{
-				FileInputStream fis = pContext.openFileInput(dbName + ".kv");
-				String fcontent = FISReader.read(fis);
-				if (fcontent.startsWith(QKVConfig.EC_PREFIX))
-				{
-					String rawStr = AES256.decode(key, fcontent.substring(QKVConfig.EC_PREFIX.length()));
-					FileOutputStream fos = pContext.openFileOutput(dbName + ".kv", Context.MODE_PRIVATE);
-					fos.write(rawStr.getBytes());
-					fos.close();
-					return new QKVCallback();
-				}
-				else
-				{
-					return new QKVCallback(false, QKVCallback.CODE_FAILED, "No a valid encrypted database!");
-				}
-			}
-			catch (Exception e)
-			{
-				if (QKVConfig.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				return new QKVCallback(false, QKVCallback.CODE_FAILED, "Failed to decrypt.");
-			}
-		}
+		return this.sKVDB.containsKey(QKVConfig.KVDB_FILE_NAME);
 	}
-	
-	public boolean isPersistableKVDBOpened(String dbName)
+
+	public boolean isDatabaseOpened(String dbAlias)
 	{
-		if (this.pKVDBMap.containsKey(dbName))
+		if (dbAlias.equals(QKVConfig.KVDB_NAME) || dbAlias.equals(QKVConfig.KVDB_FILE_NAME))
 		{
-			return true;
+			return isDatabaseOpened();
 		}
-		else
+		if (dbAlias == null)
 		{
 			return false;
 		}
-	}
-
-	public boolean isKVDBOpened(String dbAlias)
-	{
-		if (this.kvdbMap.containsKey(dbAlias))
-		{
-			return true;
-		}
 		else
 		{
-			return false;
+			if (dbAlias.length() == 0)
+			{
+				dbAlias = QKVConfig.KVDB_FILE_NAME;
+			}
+			dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
 		}
+		return this.sKVDB.containsKey(dbAlias);
 	}
 
-	public void releaseKVDB(String dbAlias)
+	public boolean releaseDatabase()
 	{
-		if (this.kvdbMap.containsKey(dbAlias))
+		if (isDatabaseOpened())
 		{
-			kvdbMap.remove(dbAlias);
+			this.sKVDB.remove(QKVConfig.KVDB_FILE_NAME);
+			return true;
 		}
-		else if (QKVConfig.DEBUG)
-		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release kvdb: No opened database matches the given alias \"" + dbAlias + "\"!");
-		}
+		return false;
 	}
 
-	public void releasePersistableKVDB(String dbName)
+	public boolean releaseDatabase(String dbAlias)
 	{
-		if (this.pKVDBMap.containsKey(dbName))
+		if (isDatabaseOpened(dbAlias))
 		{
-			pKVDBMap.remove(dbName);
+			dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ?dbAlias: dbAlias + QKVConfig.KVDB_EXT;
+			this.sKVDB.remove(dbAlias);
+			return true;
 		}
-		else if (QKVConfig.DEBUG)
-		{
-			Log.w(QKVConfig.PUBLIC_LTAG, "Failed to release persistable kvdb: No opened database matches the given name \"" + dbName + "\"!");
-		}
+		return false;
 	}
 
-	public void releaseAllKVDB()
+	public void releaseAllDatabases()
 	{
-		this.kvdbMap.clear();
-	}
-
-	public void releaseAllPersistableKVDB()
-	{
-		this.pKVDBMap.clear();
+		this.sKVDB.clear();
 	}
 }
