@@ -6,7 +6,7 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 *English &amp; Chinese API Documentation Available! 含有中文&amp;英文API文档*
 
-> 03/07 Updated to New Version 0.8! 已更新至0.8版本！
+*NOTICE: The license is changed to Apache License 2.0. 注意:授权协议已更改为Apache License 2.0.*
 
 ### Preface 前言
 
@@ -61,7 +61,7 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-#### 0.8 (Library 库) / 0.8 (Demo 演示)
+##### 0.8 (Library 库) / 0.8 (Demo 演示)
 
 ### Features 特性
 
@@ -267,10 +267,26 @@ qucikKv.releaseAllDatabases(); //One-click-destroy :P
 qucikKv.isDatabaseOpened("dbAlias");
 ```
 
-### Copyright 版权信息
+### Special Thanks 特别感谢
 
-* Copyright &copy; 2014-2015 SumiMakito(RDGroup)
+* Json-smart-v2 (Apache License 2.0) https://code.google.com/p/json-smart/
 
-* Licensed under GNU GPL v3 License.
+### Copyright &amp; License 版权信息与授权协议
 
-* [Read License 查看授权许可协议](LICENSE)
+Copyright &copy; 2014-2015 Sumi Makito
+
+Licensed under Apache License 2.0 License.
+
+```
+Copyright 2014-2015 Sumi Makito
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0 
+    
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. 
+```
+
+[LICENSE 协议全文](http://www.apache.org/licenses/LICENSE-2.0)
+
+[NOTICE 声明](NOTICE)

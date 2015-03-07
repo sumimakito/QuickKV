@@ -1,9 +1,9 @@
 /**      
  * QucikKV
  * Copyright (c) 2014-2015 Sumi Makito
- * Licensed under GNU GPL v3 License.
- * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.7
+ * Licensed under Apache License 2.0.
+ * @author sumimakito <sumimakito@hotmail.com>
+ * @version 0.8
  */
  
 package sumimakito.android.quickkv.security;
