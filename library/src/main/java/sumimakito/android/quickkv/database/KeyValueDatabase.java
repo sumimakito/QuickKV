@@ -2,8 +2,8 @@
  * QucikKV
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under Apache License 2.0.
- * @author sumimakito <sumimakito@hotmail.com>
- * @version 0.8
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.8.1
  */
 
 package sumimakito.android.quickkv.database;
@@ -16,13 +16,13 @@ import sumimakito.android.quickkv.*;
 import net.minidev.json.*;
 import net.minidev.json.parser.*;
 import sumimakito.android.quickkv.security.*;
+import sumimakito.android.quickkv.database.KeyValueDatabase.*;
 
 public class KeyValueDatabase implements QKVDatabase
 {
 	private HashMap<Object, Object> dMap;
 	private Context pContext;
 	private String dbAlias;
-
 	private String pKey;
 
 	public KeyValueDatabase(Context context)
@@ -178,7 +178,7 @@ public class KeyValueDatabase implements QKVDatabase
 				treeRoot.put("kv_prop", new JSONObject());
 				JSONObject propRoot = (JSONObject) treeRoot.get("kv_prop");
 				propRoot.put("strc_ver", "0.8@3");
-				propRoot.put("enc_enabled", (this.pKey!=null&&this.pKey.length()>0));
+				propRoot.put("enc_enabled", (this.pKey != null && this.pKey.length() > 0));
 				treeRoot.put("kv_data", new JSONObject());
 				JSONObject dataRoot = (JSONObject) treeRoot.get("kv_data");
 				Iterator iter = this.dMap.entrySet().iterator(); 
@@ -206,6 +206,21 @@ public class KeyValueDatabase implements QKVDatabase
 			}
 		}
 		else return true;
+	}
+
+	public void persist(final Callback callback)
+	{
+		new Thread(new Runnable(){
+				@Override
+				public void run()
+				{
+					synchronized (dMap)
+					{
+						if (persist()) callback.onSuccess();
+						else callback.onFailed();
+					}
+				}
+			}).start();
 	}
 
 	public boolean sync()
@@ -237,20 +252,54 @@ public class KeyValueDatabase implements QKVDatabase
 			return false;
 		}
 	}
+	
+	public void sync(final Callback callback)
+	{
+		new Thread(new Runnable(){
+				@Override
+				public void run()
+				{
+					synchronized (dMap)
+					{
+						if (sync()) callback.onSuccess();
+						else callback.onFailed();
+					}
+				}
+			}).start();
+	}
+	
+	public void sync(final boolean merge, final Callback callback)
+	{
+		new Thread(new Runnable(){
+				@Override
+				public void run()
+				{
+					synchronized (dMap)
+					{
+						if (sync(merge)) callback.onSuccess();
+						else callback.onFailed();
+					}
+				}
+			}).start();
+	}
 
-	public boolean enableEncryption(String key){
-		if(key!=null&&key.length()>0){
+	public boolean enableEncryption(String key)
+	{
+		if (key != null && key.length() > 0)
+		{
 			this.pKey = key;
 			persist();
 			return true;
-		}else return false;
+		}
+		else return false;
 	}
-	
-	public void disableEncryption(){
-		this.pKey=null;
+
+	public void disableEncryption()
+	{
+		this.pKey = null;
 		persist();
 	}
-	
+
 	private boolean parseKVJS(JSONObject json)
 	{
 		try
@@ -280,5 +329,11 @@ public class KeyValueDatabase implements QKVDatabase
 			QKVLogger.ex(e);
 			return false;
 		}
+	}
+
+	public interface Callback
+	{
+		public void onSuccess();
+		public void onFailed();
 	}
 }

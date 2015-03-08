@@ -61,9 +61,11 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.8 (Library 库) / 0.8 (Demo 演示)
+##### 0.8.1 (Library 库) / 0.8 (Demo 演示)
 
 ### Features 特性
+
+* Support async method for heavy operations 支持繁重操作的异步执行 (0.8.1+)
 
 * More convenient 操作更便捷 (0.8+)
 
@@ -91,7 +93,7 @@ pkvdb2.get("Key");
 
 [CR-α 代码仓库](http://repo.keep.moe/static/?dir=QuickKV)
 
-##### Demo 演示 (NEW 0.8)
+##### Demo 演示 (0.8)
 
 [Dropbox](https://www.dropbox.com/s/53b86j9xuhpw9f1/QuickKVDemo.apk?dl=0)
 
@@ -170,8 +172,21 @@ qkvdb.remove("key");
 
 *Warning: ONLY String/Integer/Long/Double/Float/Boolean/JSONObject/JSONArray can be persisted to local storage. 注意：只有String/Integer/Long/Double/Float/Boolean/JSONObject/JSONArray类型的数据才可被持久化。*
 
+*Async is supported after 0.8.1. 0.8.1版本后引入异步支持*
+
 ```java
-qkvdb.persist();
+qkvdb.persist(); //return boolean
+//With a callback
+qkvdb.persist(new KeyValueDatabase.Callback(){
+    @Override
+    public void onSuccess(){
+        //Do something...
+    }
+    @Override
+    public void onFailed(){
+        //Do something...
+    }
+}); //return void(nothing)
 ```
 
 ##### Synchronize 同步
@@ -181,6 +196,8 @@ qkvdb.persist();
 > This method will synchronize current database from persisted version.
 > 这个方法将会使数据从已持久化版本同步至当前数据库。
 
+*Async is supported after 0.8.1. 0.8.1版本后引入异步支持*
+
 ###### Sync mode 同步模式
 
 > Merge(true) is default. 合并模式为默认.
@@ -188,6 +205,8 @@ qkvdb.persist();
 + Merge(true):Synchronize persisted version to current database and overwrite duplicate items. 合并模式：将已持久化的部分覆盖至当前数据库，其他数据保持原样。
 
 + Merge(false):Clear database first. Then synchronize persisted version to current database. 非合并模式：先清除数据库内容，再将已持久化的数据载入至当前数据库。
+
+###### Code Snippet 代码片段
 
 ```java
 qkvdb1.put("key", "value");
@@ -204,6 +223,28 @@ qkvdb2.get("qkv2");
 qkvdb2.sync(false); //Merge mode is false
 qkvdb2.get("qkv2");
 //Output: null (because qkvdb doesn't have this key-value)
+//Async (0.8.1+)
+qkvdb2.sync(new KeyValueDatabase.Callback(){
+    @Override
+    public void onSuccess(){
+        //Do something...
+    }
+    @Override
+    public void onFailed(){
+        //Do something...
+    }
+});
+//Specify a mode for sync with callback
+qkvdb2.sync(true, new KeyValueDatabase.Callback(){
+    @Override
+    public void onSuccess(){
+        //Do something...
+    }
+    @Override
+    public void onFailed(){
+        //Do something...
+    }
+});
 ```
 
 ##### Encrypt/Decrypt 加密/解密

@@ -2,10 +2,10 @@
  * QucikKV
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under Apache License 2.0.
- * @author sumimakito <sumimakito@hotmail.com>
- * @version 0.8
+ * @author sumimakito<sumimakito@hotmail.com>
+ * @version 0.8.1
  */
- 
+
 package sumimakito.android.quickkv.database;
 
 import java.util.*;
