@@ -61,7 +61,7 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.8.1 (Library 库) / 0.8 (Demo 演示)
+##### 0.8.2 (Library 库) / 0.8 (Demo 演示)
 
 ### Features 特性
 

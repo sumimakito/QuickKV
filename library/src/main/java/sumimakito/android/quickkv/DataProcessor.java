@@ -3,7 +3,7 @@
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under Apache License 2.0.
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.8.1
+ * @version 0.8.2
  */
 
 package sumimakito.android.quickkv;
@@ -16,10 +16,8 @@ public class DataProcessor
 {
 	public static class Persistable
 	{
-		public static Object dePrefix(String k)
+		public static Object dePrefix(String k) throws JSONException
 		{
-			try
-			{
 				if (k.startsWith("String_"))
 				{
 					return k.substring("String_".length());
@@ -56,11 +54,6 @@ public class DataProcessor
 				{
 					return null;
 				}
-			}
-			catch (Exception e)
-			{
-				return null;
-			}
 		}
 
 		public static boolean isValidDataType(Object obj)

@@ -3,7 +3,7 @@
  * Copyright (c) 2014-2015 Sumi Makito
  * Licensed under Apache License 2.0.
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.8.1
+ * @version 0.8.2
  */
 
 package sumimakito.android.quickkv.database;
