@@ -6,8 +6,6 @@ Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
 *English &amp; Chinese API Documentation Available! 含有中文&amp;英文API文档*
 
-*NOTICE: The license is changed to Apache License 2.0. 注意:授权协议已更改为Apache License 2.0.*
-
 ### Preface 前言
 
 Map and List are too complex to initialize. Actually, the things we only need to focus on are the key and the value. So ... QuickKV comes up!
@@ -84,6 +82,16 @@ pkvdb2.get("Key");
 * Persistable 可持久化 (0.6+)
 
 ### TODO 任务与目标
+
+* 为提交至中心仓库，包名将变更为 ``` com.github.sumimakito.quickkv ``` 。
+
+* 数据库文件读入使用 MaglevIO (原RapidIO)
+
+* 数据分级缓存机制
+
+* 解决超大数据库文件读入OOM问题
+
+* 文档部分将单独分区展示
 
 * Make it better and better 使它变得越来越好
 
