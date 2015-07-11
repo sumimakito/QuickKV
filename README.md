@@ -59,9 +59,12 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.8.2 (Library 库) / 0.8 (Demo 演示)
+##### 0.9.1 (Library 库) / 0.8 (Demo 演示)
 
 ### Features 特性
+* Package name is changed to ``` com.github.sumimakito.quickkv ``` 包名已变更为 ``` com.github.sumimakito.quickkv ``` (0.9+)
+
+* Use MaglevIO to improve reading speed 使用 MaglevIO 提升数据库读入速度 (0.9+)
 
 * Support async method for heavy operations 支持繁重操作的异步执行 (0.8.1+)
 
@@ -83,15 +86,11 @@ pkvdb2.get("Key");
 
 ### TODO 任务与目标
 
-* 为提交至中心仓库，包名将变更为 ``` com.github.sumimakito.quickkv ``` 。
-
-* 数据库文件读入使用 MaglevIO (原RapidIO)
+* 提交至中心仓库
 
 * 数据分级缓存机制
 
 * 解决超大数据库文件读入OOM问题
-
-* 文档部分将单独分区展示
 
 * Make it better and better 使它变得越来越好
 
@@ -322,6 +321,14 @@ qucikKv.isDatabaseOpened("dbAlias");
 ### Special Thanks 特别感谢
 
 * Json-smart-v2 (Apache License 2.0) https://code.google.com/p/json-smart/
+
+### Donate 捐赠
+
+如果您觉得我的项目还不错，欢迎捐赠，您的支持会使我的项目做得更好，并助我走得更远，感谢。
+
+![Alipay QRCode](https://raw.githubusercontent.com/SumiMakito/StaticStorage/master/Image/ali_qr.png)
+
+使用 支付宝 扫描上面的二维码
 
 ### Copyright &amp; License 版权信息与授权协议
 
