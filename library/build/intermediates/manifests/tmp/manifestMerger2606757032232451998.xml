@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.sumimakito.quickkv.test">
+
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="21" />
+
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="com.github.sumimakito.quickkv.test"
+                     android:handleProfiling="false"
+                     android:functionalTest="false"
+                     android:label="Tests for com.github.sumimakito.quickkv.test"/>
+</manifest>
