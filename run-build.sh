@@ -1,4 +1,4 @@
-./gradlew clean build
+./gradlew --stacktrace clean build
 GITHUB_TAG=Snapshot_${TRAVIS_BRANCH}_Build.${TRAVIS_BUILD_NUMBER}
 cwd="`pwd`"
 cd ./library/build/libs
