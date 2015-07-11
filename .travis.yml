@@ -20,7 +20,7 @@ after_success:
 deploy:
     provider: releases
     api_key:
-      secure: LdXNHVLhA2XoGRplJY7B/+jX4san2BvE1kNpQNSSflANL/IKF+8gFv9TDV6CJyFfSSpNmprnBfqYvsZBwuxDsWQ14WJcGROWfBXPgCuPYh+48cRxfyuMfTjmAnYaupe9KqME/VhnSyn8kstw0/7zbYQALehdpjIRvuV5l5OuC5K38WJibzHsC+TRTe6+nbkXxfz1cXdPq8SZhddhL9wYQppDG2TG72mZ7zpIW6Ein5o+rQ5w5+WfOuMVf+42pbUjSu4ha+QwGZF9eWSQGQwUcgBvmtx/V5v2yJJCJbs9+HlmQ+j4JFZTuG3uekkW23AVEvYW6OJ4Hy8E7sGk2xUKm71DlfLG82GcLEKGiK43aa4Y4A00NrH+em+6F24RH6PERXQtRzBV9v3x2RQqdTkCl52AMceL0p1fR56aYQQARitJuiLcUkCtGI3yRTZEOJcjAZr1NZgqOWcOmda97pNG6U41wDrsDKnykV91aFhUO7llTE1OzhtXHqptOxazl+jy8BRckJE8cnj1LKsHWSfU5Z82IMSgdWwQuxzSVKlE3B2Y0Z7xtoHcd1cxRvNlmICjNgyQpyHqPI4BEIFd/flBe2MunkN2ka0kJU0B4qfskBHxq5qGtDDTb3of/wd9y1GHFOSp7d3/vCq62vEkJdO1Joe5JqVixUg9p3mSQJ+uHMc=
+      secure: UK/XOuxfPNu/WQWncPUHE53vGp1Bp0OwQgpt14ym2rED/enAunLuwfwmBnhVizvbslI/WGAcQkdQRl+S4TC5MvAdRHNma69e32KvmL2+VFZWf9ZviR5oalYEa4T/4jx1e9XsP0bvuNWZZRGN2vEoBDjZ224jEPzoauuZVSLZusw=
     file:
       - library/build/libs/QuickKV_${GITHUB_TAG}_source.jar
       - library/build/libs/QuickKV_${GITHUB_TAG}_javadoc.jar
@@ -28,6 +28,9 @@ deploy:
     on:
       repo: SumiMakito/QuickKV
       tags: false
+
+branches:
+    except: /^(Snapshot).*$/
 
 script:
     ./run-build.sh
