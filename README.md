@@ -20,10 +20,10 @@ Map和List的初始化很复杂。事实上，我们只需要关注键与值就�
 Map<Object, Object> map = new HashMap<Object, Object>();
 map.put("Key","Value");
 JSONObject json = new JSONObject();
-Iterator iter = map.entrySet().iterator(); 
+Iterator iter = map.entrySet().iterator();
 while (iter.hasNext())
 {
-    Map.Entry entry = (Map.Entry) iter.next(); 
+    Map.Entry entry = (Map.Entry) iter.next();
     Object key = entry.getKey();
     Object value = entry.getValue();
     json.put(key.toString(), value.toString());
@@ -99,6 +99,8 @@ pkvdb2.get("Key");
 
 ##### JAR File JAR文件 (0.6+)
 
+[Releases](https://github.com/SumiMakito/QuickKV/releases)
+
 [CR-α 代码仓库](http://repo.keep.moe/static/?dir=QuickKV)
 
 ##### Demo 演示 (0.8)
@@ -108,6 +110,7 @@ pkvdb2.get("Key");
 [Google Drive](https://docs.google.com/file/d/0B_-0A4yjEnvMNTJMLTMwcEZ2Njg/edit?usp=docslist_api)
 
 [百度云](http://pan.baidu.com/share/link?shareid=3375366656&uk=1479848638)
+
 ### Usage 用法
 
 *First add jar file to your build path. 首先在Build Path中加入JAR文件。*
@@ -333,13 +336,13 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
-    
+    http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License. 
+limitations under the License.
 ```
 
 [LICENSE 协议全文](LICENSE)
