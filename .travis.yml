@@ -22,8 +22,7 @@ deploy:
     api_key:
       secure: UK/XOuxfPNu/WQWncPUHE53vGp1Bp0OwQgpt14ym2rED/enAunLuwfwmBnhVizvbslI/WGAcQkdQRl+S4TC5MvAdRHNma69e32KvmL2+VFZWf9ZviR5oalYEa4T/4jx1e9XsP0bvuNWZZRGN2vEoBDjZ224jEPzoauuZVSLZusw=
     file:
-      - library/build/libs/QuickKV_${GITHUB_TAG}_source.jar
-      - library/build/libs/QuickKV_${GITHUB_TAG}_javadoc.jar
+      - ./library/build/intermediates/bundles/release/QuickKV_${GITHUB_TAG}.jar
     skip_cleanup: true
     on:
       repo: SumiMakito/QuickKV
