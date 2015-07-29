@@ -4,44 +4,55 @@
  * Licensed under Apache License 2.0.
  *
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.8.2
+ * @version 1.0.0
  */
 
 package com.github.sumimakito.quickkv.database;
 
-import android.content.*;
+import android.content.Context;
 
 import com.github.sumimakito.maglevio.MaglevReader;
-import com.github.sumimakito.quickkv.DataProcessor;
+import com.github.sumimakito.maglevio.MaglevWriter;
 import com.github.sumimakito.quickkv.QKVConfig;
-import com.github.sumimakito.quickkv.QKVFSReader;
-import com.github.sumimakito.quickkv.QKVLogger;
+import com.github.sumimakito.quickkv.QuickKV;
 import com.github.sumimakito.quickkv.security.AES256;
+import com.github.sumimakito.quickkv.util.CompressHelper;
+import com.github.sumimakito.quickkv.util.DataProcessor;
+import com.github.sumimakito.quickkv.util.KVDBProperties;
+import com.github.sumimakito.quickkv.util.QKVLogger;
 
-import java.io.*;
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.minidev.json.*;
-
-public class KeyValueDatabase implements QKVDatabase {
+public class KeyValueDatabase extends QKVDB implements QKVDBImpl {
     private HashMap<Object, Object> dMap;
-    private Context pContext;
-    private String dbAlias;
-    private String pKey;
 
-    public KeyValueDatabase(Context context) {
-        this.pContext = context;
+    public KeyValueDatabase(QuickKV quickKV, Context context) {
+        super(quickKV, context);
         this.dbAlias = QKVConfig.KVDB_FILE_NAME;
         this.dMap = new HashMap<Object, Object>();
         this.sync(false);
         QKVLogger.log("i", "KVDB Initialized!");
     }
 
-    public KeyValueDatabase(Context context, String dbAlias) {
+    public KeyValueDatabase(QuickKV quickKV, Context context, boolean enableGZip) {
+        super(quickKV, context);
+        this.isGZipEnabled = enableGZip;
+        this.dbAlias = QKVConfig.KVDB_FILE_NAME;
+        this.dMap = new HashMap<Object, Object>();
+        this.sync(false);
+        QKVLogger.log("i", "KVDB Initialized!");
+    }
+
+    public KeyValueDatabase(QuickKV quickKV, Context context, String dbAlias) {
+        super(quickKV, context);
         this.pContext = context;
         this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ? dbAlias : dbAlias + QKVConfig.KVDB_EXT;
         this.dMap = new HashMap<Object, Object>();
@@ -49,13 +60,39 @@ public class KeyValueDatabase implements QKVDatabase {
         QKVLogger.log("i", "KVDB Initialized!");
     }
 
-    public KeyValueDatabase(Context context, String dbAlias, String key) {
+    public KeyValueDatabase(QuickKV quickKV, Context context, String dbAlias, boolean enableGZip) {
+        super(quickKV, context);
+        this.isGZipEnabled = enableGZip;
+        this.pContext = context;
+        this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ? dbAlias : dbAlias + QKVConfig.KVDB_EXT;
+        this.dMap = new HashMap<Object, Object>();
+        this.sync(false);
+        QKVLogger.log("i", "KVDB Initialized!");
+    }
+
+    public KeyValueDatabase(QuickKV quickKV, Context context, String dbAlias, String key) {
+        super(quickKV, context);
         this.pKey = key;
         this.pContext = context;
         this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ? dbAlias : dbAlias + QKVConfig.KVDB_EXT;
         this.dMap = new HashMap<Object, Object>();
         this.sync(false);
         QKVLogger.log("i", "KVDB Initialized!");
+    }
+
+    public KeyValueDatabase(QuickKV quickKV, Context context, String dbAlias, String key, boolean enableGZip) {
+        super(quickKV, context);
+        this.isGZipEnabled = enableGZip;
+        this.pKey = key;
+        this.pContext = context;
+        this.dbAlias = dbAlias.endsWith(QKVConfig.KVDB_EXT) ? dbAlias : dbAlias + QKVConfig.KVDB_EXT;
+        this.dMap = new HashMap<Object, Object>();
+        this.sync(false);
+        QKVLogger.log("i", "KVDB Initialized!");
+    }
+
+    public void setGZipEnabled(boolean enabled){
+        isGZipEnabled = enabled;
     }
 
     @Override
@@ -155,12 +192,13 @@ public class KeyValueDatabase implements QKVDatabase {
         if (this.dMap.size() > 0) {
             try {
                 JSONObject treeRoot = new JSONObject();
-                treeRoot.put("_prop", new JSONObject());
-                JSONObject propRoot = (JSONObject) treeRoot.get("_prop");
-                propRoot.put("_struct_ver", QKVConfig.STRUCT_VER_STRING);
-                propRoot.put("_encryption", (this.pKey != null && this.pKey.length() > 0));
-                treeRoot.put("_data", new JSONObject());
-                JSONObject dataRoot = (JSONObject) treeRoot.get("_data");
+                treeRoot.put(KVDBProperties.C_PROP, new JSONObject());
+                JSONObject propRoot = (JSONObject) treeRoot.get(KVDBProperties.C_PROP);
+                propRoot.put(KVDBProperties.P_PROP_STRUCT_VER, QKVConfig.STRUCT_VER_STRING);
+                propRoot.put(KVDBProperties.P_PROP_GZIP, isGZipEnabled);
+                propRoot.put(KVDBProperties.P_PROP_ENCRYPTION, (this.pKey != null && this.pKey.length() > 0));
+                treeRoot.put(KVDBProperties.P_DATA, new JSONObject());
+                JSONObject dataRoot = (JSONObject) treeRoot.get(KVDBProperties.P_DATA);
                 Iterator iter = this.dMap.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
@@ -174,9 +212,15 @@ public class KeyValueDatabase implements QKVDatabase {
                             dataRoot.put(DataProcessor.Persistable.addPrefix(key), DataProcessor.Persistable.addPrefix(val));
                     }
                 }
-                FileOutputStream kvdbFos = pContext.openFileOutput(dbAlias == null ? QKVConfig.KVDB_FILE_NAME : dbAlias, Context.MODE_PRIVATE);
-                kvdbFos.write(treeRoot.toString().getBytes());
-                kvdbFos.close();
+                if (isGZipEnabled) {
+                    String compressedData = DataProcessor.Basic.bytesToHex(CompressHelper.compress(dataRoot.toString().getBytes()));
+                    treeRoot.remove(KVDBProperties.P_DATA);
+                    treeRoot.put(KVDBProperties.P_DATA, compressedData);
+                }
+                String fName = dbAlias == null ? QKVConfig.KVDB_FILE_NAME : dbAlias;
+                File fTarget = new File(pInstance.getStorageManager().getWorkspace(), fName);
+                MaglevWriter.NIO.MappedBFR.writeBytesToFile(treeRoot.toString().getBytes(),
+                        fTarget.getAbsolutePath());
                 return true;
             } catch (Exception e) {
                 QKVLogger.ex(e);
@@ -206,15 +250,26 @@ public class KeyValueDatabase implements QKVDatabase {
             if (!merge) {
                 this.dMap.clear();
             }
-            File kvdbFile = new File(pContext.getFilesDir(), dbAlias == null ? QKVConfig.KVDB_FILE_NAME : dbAlias);
+
+            File kvdbFile = new File(pInstance.getStorageManager().getWorkspace(), dbAlias == null ? QKVConfig.KVDB_FILE_NAME : dbAlias);
             String rawData = kvdbFile.length() < 256 * 1000 ? MaglevReader.IO.fileToString(kvdbFile.getAbsolutePath()) : MaglevReader.NIO.MappedBFR.fileToString(kvdbFile.getAbsolutePath());
-            ;
             if (rawData.length() > 0) {
                 JSONObject treeRoot = (JSONObject) JSONValue.parse(rawData);
-                if (parseKVJS((JSONObject) treeRoot.get("_data"))) return true;
-                else return false;
+                JSONObject properties = (JSONObject) treeRoot.get(KVDBProperties.C_PROP);
+                boolean gzip = (Boolean) properties.get(KVDBProperties.P_PROP_GZIP);
+                if (gzip) {
+                    String rawDataBody = CompressHelper.decompress(
+                            DataProcessor.Basic.hexToBytes((String) treeRoot.get(KVDBProperties.P_DATA))
+                    );
+                    if (parseKVJS((JSONObject) JSONValue.parse(rawDataBody))) return true;
+                    else return false;
+                } else {
+                    if (parseKVJS((JSONObject) treeRoot.get(KVDBProperties.P_DATA))) return true;
+                    else return false;
+                }
             }
             return true;
+
         } catch (Exception e) {
             QKVLogger.ex(e);
             return false;

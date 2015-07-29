@@ -4,20 +4,22 @@
  * Licensed under Apache License 2.0.
  *
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.8.2
+ * @version 1.0.0
  */
 
 package com.github.sumimakito.quickkv.security;
 
-import android.util.*;
+import android.util.Base64;
 
 import com.github.sumimakito.quickkv.QKVConfig;
 
-import java.io.*;
-import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
-import javax.crypto.*;
-import javax.crypto.spec.*;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class AES256 {
     public static String encode(String ePasK, String eConT) {

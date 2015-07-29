@@ -59,38 +59,53 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.9.1 (Library 库) / 0.8 (Demo 演示)
+##### 0.9.5 (Library 库) / 0.8 (Demo 演示)
 
-### Features 特性
-* Package name is changed to ``` com.github.sumimakito.quickkv ``` 包名已变更为 ``` com.github.sumimakito.quickkv ``` (0.9+)
+### Changelog 更新说明
 
-* Use MaglevIO to improve reading speed 使用 MaglevIO 提升数据库读入速度 (0.9+)
+##### 0.9.5+
 
-* Support async method for heavy operations 支持繁重操作的异步执行 (0.8.1+)
+* Support GZip compression 支持GZip压缩
 
-* More convenient 操作更便捷 (0.8+)
+* Support custom workspace 可设置工作目录
 
-* Improved reading speed 文件读取解析更迅速 (0.8+)
+* Use MaglevIO to speed up reading and writing 使用MaglevIO提升数据库读取与写入速度
 
-* Generic supprot(Improving) 泛型支持(改进中) (0.8+)
+##### 0.9+
 
-* AES256 encryption support 支持AES256加密 (0.8+)
+* Package name is changed to ``` com.github.sumimakito.quickkv ``` 包名已变更为 ``` com.github.sumimakito.quickkv ```
 
-* High performance 高性能 (0.7+)
+* Use MaglevIO to improve reading speed(reading only) 使用MaglevIO提升数据库读取速度(仅读取)
 
-* Allow nearly all type of keys and values 几乎支持所有类型的键与值 (0.6+)
+##### 0.8.1+
 
-* Multi-database management 多数据库管理 (0.6+)
+* Support async method for heavy operations 支持繁重操作的异步执行
 
-* Persistable 可持久化 (0.6+)
+* More convenient 操作更便捷
+
+* Improved reading speed 文件读取解析更迅速
+
+* Generic supprot(Improving) 泛型支持(改进中)
+
+* AES256 encryption support 支持AES256加密
+
+##### 0.7+
+
+* High performance 高性能
+
+##### 0.6+
+
+* Allow nearly all type of keys and values 几乎支持所有类型的键与值
+
+* Multi-database management 多数据库管理
+
+* Persistable 可持久化
 
 ### TODO 任务与目标
 
 * 提交至中心仓库
 
 * 数据分级缓存机制
-
-* 解决超大数据库文件读入OOM问题
 
 * Make it better and better 使它变得越来越好
 
@@ -143,6 +158,7 @@ qkvdb = quickKv.getDatabase("Foobar");
 //Or or get a database with an encryption key
 qkvdb = quickKv.getDatabase("", "encrypt123"); //leave a blank database name = "I want to use the default name"
 qkvdb = quickKv.getDatabase("Foobar", "encrypt123"); //"encryptq123" is your encryption key
+qkvdb = quickKv.getDatabase("Foobar", "encrypt123", true); //enable gzip for encrypted database
 ```
 
 #### Values returned after operation 操作后返回值 (0.8+)
