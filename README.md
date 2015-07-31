@@ -187,6 +187,8 @@ hckvdb = quickKv.getHCKVDB("CustomName"); // --> /tmp/CustomName
 hckvdb = quickKv.getHCKVDB("CustomName.db"); // --> /tmp/CustomName.db
 ```
 
+[See also:Appendix1 参见:附录 1](https://github.com/SumiMakito/QuickKV#appendix-1something-about-hckvdb-附录-1关于大容量键值数据库的说明)
+
 #### Return values after operations 操作后返回值 (0.8+)
 
 * true = Success :)
@@ -372,11 +374,11 @@ qucikKv.isDatabaseOpened("dbAlias");
 
 ### Contributors 贡献者
 
-@SumiMakito
+[SumiMakito](https://github.com/SumiMakito)
 
 ### Support 支持
 
-本项目目前由 SumiMakito 一人进行维护，如果您觉得这个项目还不错，欢迎贡献代码或捐赠支持本项目发展，您的支持会使我的项目做得更好，感谢！
+本项目目前由 SumiMakito 一人进行维护，如果您觉得这个项目还不错，欢迎贡献代码或捐赠支持本项目发展，您的支持会使项目做得更好，感谢！
 
 ![Alipay QRCode](https://raw.githubusercontent.com/SumiMakito/StaticStorage/master/Image/ali_qr.png)
 
