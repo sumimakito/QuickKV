@@ -11,6 +11,7 @@ package com.github.sumimakito.quickkv;
 
 import android.content.Context;
 
+import com.github.sumimakito.quickkv.database.HCKeyValueDatabase;
 import com.github.sumimakito.quickkv.database.KeyValueDatabase;
 import com.github.sumimakito.quickkv.util.StorageManager;
 
@@ -124,6 +125,10 @@ public class QuickKV {
         }
 
         return this.sKVDB.get(dbAlias);
+    }
+
+    public HCKeyValueDatabase getHCKVDB(String pDBName){
+        return new HCKeyValueDatabase(this, pDBName);
     }
 
     public boolean isDatabaseOpened() {
