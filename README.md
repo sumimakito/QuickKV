@@ -59,9 +59,13 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 0.9.5 (Library 库) / 0.8 (Demo 演示)
+##### 1.0.0 (Library 库) / 0.8 (Demo 演示)
 
 ### Changelog 更新说明
+
+##### 1.0.0+
+
+* New type: High capacity key-value database 新增数据库类型: 大容量键值数据库
 
 ##### 0.9.5+
 
@@ -143,30 +147,52 @@ import sumimakito.android.quickkv.*;
 QuickKV quickKv = new QuickKV(this);
 ```
 
+#### Customize(Optional) 自定义(可选)
+
+##### Set workspace 设定工作目录
+
+* Default workspace is ```Context.getFilesDir();``` *
+
+* 默认工作目录为 ```Context.getFilesDir();``` *
+
+```java
+quickKv.setWorkspace("/tmp");
+```
+
 #### Get database 取得数据库
 
 > In the new version 0.8, we removed PersistableKVDB. We merged main functions in the KeyValueDatabase. Now QuickKV is more easy to use!
 > 在0.8新版本中，我们移除了可持续化KV数据库。我们将主要功能合并进了KeyValueDatabase。现在，QuickKV变得更易用！
 
+##### Normal KVDB 普通键值数据库
+
 ```java
-//Get a database with the default name
-qkvdb = quickKv.getDatabase();
-
-//Or get a database with your own name
-qkvdb = quickKv.getDatabase("Foobar");
-
-//Or or get a database with an encryption key
-qkvdb = quickKv.getDatabase("", "encrypt123"); //leave a blank database name = "I want to use the default name"
-qkvdb = quickKv.getDatabase("Foobar", "encrypt123"); //"encryptq123" is your encryption key
-qkvdb = quickKv.getDatabase("Foobar", "encrypt123", true); //enable gzip for encrypted database
+kvdb = quickKv.getDatabase(); // --> database.qkv
+kvdb = quickKv.getDatabase(true); // --> database.qkv (gzip)
+kvdb = quickKv.getDatabase("CustomName"); // --> CustomName.qkv
+kvdb = quickKv.getDatabase("CustomName.db"); // --> CustomName.db
+kvdb = quickKv.getDatabase("CustomName", true); // --> CustomName.qkv (gzip)
+kvdb = quickKv.getDatabase("", "Password"); // --> database.qkv (encrypted)
+kvdb = quickKv.getDatabase("CustomName", "Password"); // --> CustomName.qkv (encrypted)
+kvdb = quickKv.getDatabase("CustomName", "Password", true); // --> CustomName.qkv (encrypted+gzip)
 ```
 
-#### Values returned after operation 操作后返回值 (0.8+)
+##### High Capacity KVDB 大容量键值数据库(1.0.0+)
 
-> Some method will return a boolean value, such as put(),sync(),etc. Ture=Success, False=Failed
-> 部分方法将会返回一个布尔值，例如put()、sync()等方法。真=成功，假=失败。
+* Less OOM, Experimental. 更少的内存溢出问题，试验性功能。 *
 
-#### Operate database 操作数据库
+```java
+quickKv.setWorkspace("/tmp"); // IMPORTANT: Must set workspace first!!
+hckvdb = quickKv.getHCKVDB("CustomName"); // --> /tmp/CustomName
+hckvdb = quickKv.getHCKVDB("CustomName.db"); // --> /tmp/CustomName.db
+```
+
+#### Return values after operations 操作后返回值 (0.8+)
+
+* true = Success :)
+* false = Failed :(
+
+#### Operate Normal KVDB 操作普通数据库
 
 ##### Add a key-value data 添加一条KV数据
 
@@ -222,7 +248,7 @@ qkvdb.persist(new KeyValueDatabase.Callback(){
 > This method will synchronize current database from persisted version.
 > 这个方法将会使数据从已持久化版本同步至当前数据库。
 
-*Async is supported after 0.8.1. 0.8.1版本后引入异步支持*
+* After 0.8.1, async is supported. 0.8.1版本后引入异步支持 *
 
 ###### Sync mode 同步模式
 
@@ -334,13 +360,23 @@ qucikKv.releaseAllDatabases(); //One-click-destroy :P
 qucikKv.isDatabaseOpened("dbAlias");
 ```
 
+#### Appendix 1:Something about HCKVDB 附录 1:关于大容量键值数据库的说明
+
+* ```hckvdb.containsValue();``` is disabled(will returns false forever) 该方法已禁用
+
+* Because HCKVDB is aimed for avoiding OOM issue, searching/persisting performance is still need to improve. 因HCKVDB的目标是避免OOM问题，搜索与持续化的性能仍待提高。
+
 ### Special Thanks 特别感谢
 
 * Json-smart-v2 (Apache License 2.0) https://code.google.com/p/json-smart/
 
-### Donate 捐赠
+### Contributors 贡献者
 
-如果您觉得我的项目还不错，欢迎捐赠，您的支持会使我的项目做得更好，并助我走得更远，感谢。
+@SumiMakito
+
+### Support 支持
+
+本项目目前由 SumiMakito 一人进行维护，如果您觉得这个项目还不错，欢迎贡献代码或捐赠支持本项目发展，您的支持会使我的项目做得更好，感谢！
 
 ![Alipay QRCode](https://raw.githubusercontent.com/SumiMakito/StaticStorage/master/Image/ali_qr.png)
 
