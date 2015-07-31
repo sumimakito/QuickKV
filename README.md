@@ -151,9 +151,9 @@ QuickKV quickKv = new QuickKV(this);
 
 ##### Set workspace 设定工作目录
 
-* Default workspace is ```Context.getFilesDir();``` *
+*Default workspace is ```Context.getFilesDir();```*
 
-* 默认工作目录为 ```Context.getFilesDir();``` *
+*默认工作目录为 ```Context.getFilesDir();```*
 
 ```java
 quickKv.setWorkspace("/tmp");
@@ -179,7 +179,7 @@ kvdb = quickKv.getDatabase("CustomName", "Password", true); // --> CustomName.qk
 
 ##### High Capacity KVDB 大容量键值数据库(1.0.0+)
 
-* Less OOM, Experimental. 更少的内存溢出问题，试验性功能。 *
+*Less OOM, Experimental. 更少的内存溢出问题，试验性功能。*
 
 ```java
 quickKv.setWorkspace("/tmp"); // IMPORTANT: Must set workspace first!!
@@ -226,7 +226,7 @@ qkvdb.remove("key");
 
 *Warning: ONLY String/Integer/Long/Double/Float/Boolean/JSONObject/JSONArray can be persisted to local storage. 注意：只有String/Integer/Long/Double/Float/Boolean/JSONObject/JSONArray类型的数据才可被持久化。*
 
-*Async is supported after 0.8.1. 0.8.1版本后引入异步支持*
+*After 0.8.1, async is supported. 0.8.1版本后引入异步支持*
 
 ```java
 qkvdb.persist(); //return boolean
@@ -250,7 +250,7 @@ qkvdb.persist(new KeyValueDatabase.Callback(){
 > This method will synchronize current database from persisted version.
 > 这个方法将会使数据从已持久化版本同步至当前数据库。
 
-* After 0.8.1, async is supported. 0.8.1版本后引入异步支持 *
+*After 0.8.1, async is supported. 0.8.1版本后引入异步支持*
 
 ###### Sync mode 同步模式
 
