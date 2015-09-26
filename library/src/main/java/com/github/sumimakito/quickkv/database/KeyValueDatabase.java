@@ -24,6 +24,8 @@ import com.github.sumimakito.quickkv.util.QKVLogger;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class KeyValueDatabase extends QKVDB implements QKVDBImpl {
+public class KeyValueDatabase extends QKVDB implements QKVDBImpl,SpecificGettersImpl {
     private HashMap<Object, Object> dMap;
 
     public KeyValueDatabase(QuickKV quickKV, Context context) {
@@ -334,6 +336,46 @@ public class KeyValueDatabase extends QKVDB implements QKVDBImpl {
             QKVLogger.ex(e);
             return false;
         }
+    }
+
+    @Override
+    public <K> String getString(K k) {
+        return (String) get(k);
+    }
+
+    @Override
+    public <K> long getLong(K k) {
+        return (long) get(k);
+    }
+
+    @Override
+    public <K> int getInt(K k) {
+        return (int) get(k);
+    }
+
+    @Override
+    public <K> double getDouble(K k) {
+        return (double) get(k);
+    }
+
+    @Override
+    public <K> float getFloat(K k) {
+        return (float) get(k);
+    }
+
+    @Override
+    public <K> boolean getBoolean(K k) {
+        return (boolean) get(k);
+    }
+
+    @Override
+    public <K> org.json.JSONObject getJSONObject(K k) {
+        return (org.json.JSONObject) get(k);
+    }
+
+    @Override
+    public <K> org.json.JSONArray getJSONArray(K k) {
+        return (org.json.JSONArray) get(k);
     }
 
     public interface Callback {
