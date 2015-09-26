@@ -59,9 +59,13 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 1.0.0 (Library 库) / 0.8 (Demo 演示)
+##### 1.0.2 (Library 库) / 0.8 (Demo 演示)
 
 ### Changelog 更新说明
+
+##### 1.0.2+
+
+* Added: Specific getters, less cast! 新增: 特定类型的Getter，免去Cast烦恼。
 
 ##### 1.0.0+
 
@@ -211,6 +215,9 @@ qkvdb.put(k,v); //Put everything as you like
 
 ```java
 qkvdb.get("something_key");
+qkvdb.getString("a_string");
+qkvdb.getInt("an_int");
+//... and more specific getters were added after v1.0.2
 ```
 
 ##### Remove data 移除数据
@@ -406,6 +413,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-[LICENSE 协议全文](LICENSE)
+[LICENSE 授权许可文件](LICENSE)
 
-[NOTICE 声明](NOTICE)
+[NOTICE 授权声明](NOTICE)
