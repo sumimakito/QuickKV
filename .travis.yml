@@ -20,7 +20,7 @@ after_success:
 deploy:
     provider: releases
     api_key:
-      secure: UK/XOuxfPNu/WQWncPUHE53vGp1Bp0OwQgpt14ym2rED/enAunLuwfwmBnhVizvbslI/WGAcQkdQRl+S4TC5MvAdRHNma69e32KvmL2+VFZWf9ZviR5oalYEa4T/4jx1e9XsP0bvuNWZZRGN2vEoBDjZ224jEPzoauuZVSLZusw=
+      secure: DDy78+mQPnOXz7J0nbxcnSkCIw3sTgcZvZZ7BziOcoN4dJk9Hn+B1OC5NkTR2OW6s1AGtv90glbq+gEp/PRa6RQjva0RRSOneDLeKii7uzgCNkfCI/ErhgL33nlGZB2MYXvLDi5EgSS673zgzUiyO9b4KUojbDP/OSK7idI+Hms=
     file:
       - ./library/build/libs/QuickKV_${GITHUB_TAG}.jar
     skip_cleanup: true
