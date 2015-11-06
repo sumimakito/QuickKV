@@ -11,11 +11,11 @@ before_install:
     - chmod +x ./gradlew
 
 after_success:
-    - git config --global user.email "sumimaito@hotmail.com"
-    - git config --global user.name "SumiMakito"
-    - export GITHUB_TAG=Snapshot_${TRAVIS_BRANCH}_Build.${TRAVIS_BUILD_NUMBER}
-    - git tag ${GITHUB_TAG}
-    - git push --quiet https://${GITHUB_KEY}@github.com/SumiMakito/QuickKV.git ${GITHUB_TAG}
+    - git config --global user.email "sumimaito@hotmail.com" > /dev/null
+    - git config --global user.name "SumiMakito" > /dev/null
+    - export GITHUB_TAG=Snapshot_${TRAVIS_BRANCH}_Build.${TRAVIS_BUILD_NUMBER} > /dev/null
+    - git tag ${GITHUB_TAG} > /dev/null
+    - git push --quiet https://${GITHUB_KEY}@github.com/SumiMakito/QuickKV.git ${GITHUB_TAG} > /dev/null
 
 deploy:
     provider: releases
@@ -32,4 +32,4 @@ branches:
     except: /^(Snapshot).*$/
 
 script:
-    ./run-build.sh
+    ./run-build.sh > /dev/null
