@@ -63,6 +63,10 @@ pkvdb2.get("Key");
 
 ### Changelog 更新说明
 
+##### 1.0.3+
+
+* Added: Supported filling the database by HashMap. 新增: 现在可以使用HashMap来填充数据库了。
+
 ##### 1.0.2+
 
 * Added: Specific getters, less cast! 新增: 特定类型的Getter，免去Cast烦恼。
@@ -204,6 +208,12 @@ hckvdb = quickKv.getHCKVDB("CustomName.db"); // --> /tmp/CustomName.db
 
 ```java
 qkvdb.put(k,v); //Put everything as you like
+```
+
+##### Add plenty of data in HashMap 将HashMap中的多条数据加入
+
+```java
+qkvdb.put(hashMap); //Auto filled
 ```
 
 ##### Get value of the given key 通过键取得值
