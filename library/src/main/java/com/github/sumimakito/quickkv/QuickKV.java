@@ -1,10 +1,9 @@
 /**
  * QucikKV
- * Copyright (c) 2014-2015 Sumi Makito
+ * Copyright 2014-2016 Sumi Makito
  * Licensed under Apache License 2.0.
  *
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 1.0.0
  */
 
 package com.github.sumimakito.quickkv;

@@ -59,9 +59,13 @@ pkvdb2.get("Key");
 
 ### Current version 当前版本
 
-##### 1.0.2 (Library 库) / 0.8 (Demo 演示)
+##### 1.0.5 (Library 库) / 0.8 (Demo 演示)
 
 ### Changelog 更新说明
+
+##### 1.0.5+
+
+* Add JitPack support. 此版本起可以使用JitPack添加依赖
 
 ##### 1.0.3+
 
@@ -115,21 +119,36 @@ pkvdb2.get("Key");
 
 ### TODO 任务与目标
 
-* 提交至中心仓库
-
 * 数据分级缓存机制
 
 * Make it better and better 使它变得越来越好
 
-### Download 下载
+### Add to your project 添加到你的项目中
 
-##### JAR File JAR文件 (0.6+)
+##### Use JitPack.io(recommended) 使用JitPack.io(推荐)
+
+Add JitPack repository to build.gradle in project root. / 在项目根目录下的build.gradle中加入以下内容
+```
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+Add the dependency to build.gradle in app root. / 在应用目录下的build.gradle中加入以下依赖
+```
+dependencies {
+	compile 'com.github.SumiMakito:QuickKV:1.0.5'
+}
+```
+
+##### JAR File(~1.0.3, deprecated) JAR文件(~1.0.3, 已弃用)
 
 [Releases](https://github.com/SumiMakito/QuickKV/releases)
 
-[CR-α 代码仓库](http://repo.keep.moe/static/?dir=QuickKV)
-
-##### Demo 演示 (0.8)
+##### Demo APK 演示APK (0.8)
 
 [Dropbox](https://www.dropbox.com/s/53b86j9xuhpw9f1/QuickKVDemo.apk?dl=0)
 
@@ -395,15 +414,21 @@ qucikKv.isDatabaseOpened("dbAlias");
 
 ### Support 支持
 
-本项目目前由 SumiMakito 一人进行维护，如果您觉得这个项目还不错，欢迎贡献代码或捐赠支持本项目发展，您的支持会使项目做得更好，感谢！
+Makito是一个自由开发者，同时也是一名在校大学生。
 
-![Alipay QRCode](https://raw.githubusercontent.com/SumiMakito/StaticStorage/master/Image/ali_qr.png)
+若是我的项目曾为您带来便利，我将很开心。
 
-使用 支付宝 扫描上面的二维码
+您可以贡献代码来支持本项目，也可以通过支付宝向我打赏以示鼓励，我将感谢每一个曾支持过我的朋友。
+
+支付宝账户 826257232#qq.com (#请换成@)
+
+或使用支付宝客户端扫描下面的二维码
+
+<img src="art/aliqr.png" width="400">
 
 ### Copyright &amp; License 版权信息与授权协议
 
-Copyright &copy; 2014-2015 Sumi Makito
+Copyright 2014-2016 Sumi Makito
 
 Licensed under Apache License 2.0 License.
 

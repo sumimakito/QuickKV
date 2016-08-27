@@ -1,22 +1,32 @@
 /**
  * QucikKV
- * Copyright (c) 2014-2015 Sumi Makito
+ * Copyright 2014-2016 Sumi Makito
  * Licensed under Apache License 2.0.
  *
  * @author sumimakito<sumimakito@hotmail.com>
- * @version 0.8.2
  */
 
 package com.github.sumimakito.quickkv.util;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+
+@Deprecated
 public class QKVFSReader {
-    // !!! Abandoned !!!
-    /*
+
 	public static String readFileBFD(String pFileAbsPath) throws IOException{
 		return bfd(pFileAbsPath);
 	}
 	
-	public static String readFileNIO(String pFileAbsPath) throws IOException{
+	public static String readFileNIO(String pFileAbsPath) throws IOException {
 		return nio(pFileAbsPath);
 	}
 	
@@ -45,5 +55,5 @@ public class QKVFSReader {
 			sb.append(str);
 		}
 		return sb.toString();
-	}*/
+	}
 }
