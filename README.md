@@ -1,4 +1,7 @@
-# QuickKV [![Build Status](https://travis-ci.org/SumiMakito/QuickKV.svg?branch=master)](https://travis-ci.org/SumiMakito/QuickKV)
+# QuickKV 
+
+[![GitHub license](https://img.shields.io/github/license/SumiMakito/QuickKV.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![](https://jitpack.io/v/SumiMakito/QuickKV.svg)](https://jitpack.io/#SumiMakito/QuickKV)
 
 Lightweight &amp; Easy-to-use Key-Value Library for Android Projects.
 
@@ -61,67 +64,11 @@ pkvdb2.get("Key");
 
 ##### 1.0.5 (Library 库) / 0.8 (Demo 演示)
 
-### Changelog 更新说明
-
-##### 1.0.5+
-
-* Add JitPack support. 此版本起可以使用JitPack添加依赖
-
-##### 1.0.3+
-
-* Added: Supported filling the database by HashMap. 新增: 现在可以使用HashMap来填充数据库了。
-
-##### 1.0.2+
-
-* Added: Specific getters, less cast! 新增: 特定类型的Getter，免去Cast烦恼。
-
-##### 1.0.0+
-
-* New type: High capacity key-value database 新增数据库类型: 大容量键值数据库
-
-##### 0.9.5+
-
-* Support GZip compression 支持GZip压缩
-
-* Support custom workspace 可设置工作目录
-
-* Use MaglevIO to speed up reading and writing 使用MaglevIO提升数据库读取与写入速度
-
-##### 0.9+
-
-* Package name is changed to ``` com.github.sumimakito.quickkv ``` 包名已变更为 ``` com.github.sumimakito.quickkv ```
-
-* Use MaglevIO to improve reading speed(reading only) 使用MaglevIO提升数据库读取速度(仅读取)
-
-##### 0.8.1+
-
-* Support async method for heavy operations 支持繁重操作的异步执行
-
-* More convenient 操作更便捷
-
-* Improved reading speed 文件读取解析更迅速
-
-* Generic supprot(Improving) 泛型支持(改进中)
-
-* AES256 encryption support 支持AES256加密
-
-##### 0.7+
-
-* High performance 高性能
-
-##### 0.6+
-
-* Allow nearly all type of keys and values 几乎支持所有类型的键与值
-
-* Multi-database management 多数据库管理
-
-* Persistable 可持久化
+[Changelog / 更新说明 →](https://github.com/SumiMakito/QuickKV#changelog-更新说明)
 
 ### TODO 任务与目标
 
 * 数据分级缓存机制
-
-* Make it better and better 使它变得越来越好
 
 ### Add to your project 添加到你的项目中
 
@@ -156,31 +103,15 @@ dependencies {
 
 [百度云](http://pan.baidu.com/share/link?shareid=3375366656&uk=1479848638)
 
-### Usage 用法
-
-*First add jar file to your build path. 首先在Build Path中加入JAR文件。*
-
-*Or add the library folder in to your build path. 或者将库文件夹加入Build Path。*
-
-#### Import 导入
-
-```java
-import sumimakito.android.quickkv.*;
-```
-
-#### Initialize 实例化
+#### Get an instance / 新建实例
 
 ```java
 QuickKV quickKv = new QuickKV(this);
 ```
 
-#### Customize(Optional) 自定义(可选)
+#### Set workspace(you can skip this step) / 设定工作目录(可略过此步骤)
 
-##### Set workspace 设定工作目录
-
-*Default workspace is ```Context.getFilesDir();```*
-
-*默认工作目录为 ```Context.getFilesDir();```*
+> Default workspace / 默认工作目录: ```Context.getFilesDir();```
 
 ```java
 quickKv.setWorkspace("/tmp");
@@ -404,9 +335,65 @@ qucikKv.isDatabaseOpened("dbAlias");
 
 * Because HCKVDB is aimed for avoiding OOM issue, searching/persisting performance is still need to improve. 因HCKVDB的目标是避免OOM问题，搜索与持续化的性能仍待提高。
 
+### Changelog 更新说明
+
+##### 1.0.5+
+
+* Add JitPack support. 此版本起可以使用JitPack添加依赖
+
+##### 1.0.3+
+
+* Added: Supported filling the database by HashMap. 新增: 现在可以使用HashMap来填充数据库了。
+
+##### 1.0.2+
+
+* Added: Specific getters, less cast! 新增: 特定类型的Getter，免去Cast烦恼。
+
+##### 1.0.0+
+
+* New type: High capacity key-value database 新增数据库类型: 大容量键值数据库
+
+##### 0.9.5+
+
+* Support GZip compression 支持GZip压缩
+
+* Support custom workspace 可设置工作目录
+
+* Use MaglevIO to speed up reading and writing 使用MaglevIO提升数据库读取与写入速度
+
+##### 0.9+
+
+* Package name is changed to ``` com.github.sumimakito.quickkv ``` 包名已变更为 ``` com.github.sumimakito.quickkv ```
+
+* Use MaglevIO to improve reading speed(reading only) 使用MaglevIO提升数据库读取速度(仅读取)
+
+##### 0.8.1+
+
+* Support async method for heavy operations 支持繁重操作的异步执行
+
+* More convenient 操作更便捷
+
+* Improved reading speed 文件读取解析更迅速
+
+* Generic supprot(Improving) 泛型支持(改进中)
+
+* AES256 encryption support 支持AES256加密
+
+##### 0.7+
+
+* High performance 高性能
+
+##### 0.6+
+
+* Allow nearly all type of keys and values 几乎支持所有类型的键与值
+
+* Multi-database management 多数据库管理
+
+* Persistable 可持久化
+
 ### Special Thanks 特别感谢
 
-* Json-smart-v2 (Apache License 2.0) https://code.google.com/p/json-smart/
+* Json-smart-v2 (Apache License 2.0) http://netplex.github.io/json-smart/
 
 ### Contributors 贡献者
 
