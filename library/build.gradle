@@ -1,14 +1,17 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.sumimakito'
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion 23
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode Integer.parseInt(project.VERSION_CODE)
-        versionName project.VERSION_NAME
+        minSdkVersion 8
+        targetSdkVersion 23
+        versionCode 11
+        versionName "1.0.5"
     }
 
     buildTypes {
@@ -33,5 +36,3 @@ task fatJar(type: Jar) {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
-
-apply from: 'https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
