@@ -1,4 +1,4 @@
-# QuickKV 
+# QuickKV
 
 [![GitHub license](https://img.shields.io/github/license/SumiMakito/QuickKV.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/SumiMakito/QuickKV.svg)](https://jitpack.io/#SumiMakito/QuickKV)
@@ -401,17 +401,24 @@ qucikKv.isDatabaseOpened("dbAlias");
 
 ### Support 支持
 
-Makito是一个自由开发者，同时也是一名在校大学生。
+Makito是一个自由的软件开发者，也是一名在校大学生。
 
-若是我的项目曾为您带来便利，我将很开心。
+欢迎您去查看我的其他开源项目，同时也欢迎通过打赏支持我一下。感谢
 
-您可以贡献代码来支持本项目，也可以通过支付宝向我打赏以示鼓励，我将感谢每一个曾支持过我的朋友。
+##### 支付宝/AliPay
 
-支付宝账户 826257232#qq.com (#请换成@)
+826257232#qq.com (#请换成@)
 
-或使用支付宝客户端扫描下面的二维码
+<img src="art/aliqr.png" width="230">
 
-<img src="art/aliqr.png" width="400">
+##### 微信支付
+
+<img src="art/wechat_qr.png" width="230">
+
+##### PayPal
+
+sumimakito#hotmail.com (replace # with @)
+
 
 ### Copyright &amp; License 版权信息与授权协议
 
